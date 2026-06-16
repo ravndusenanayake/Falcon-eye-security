@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { adminDb } from "@/lib/firebase/admin";
+import * as admin from "firebase-admin";
 
 export async function POST(request: Request) {
   try {
@@ -12,11 +14,14 @@ export async function POST(request: Request) {
     
     // Remove honeypot field before processing
     const { website, ...inquiryData } = body;
-    // await adminDb.collection('inquiries').add({
-    //   ...body,
-    //   status: 'Pending Assessment',
-    //   createdAt: admin.firestore.FieldValue.serverTimestamp()
-    // });
+    
+    // Add to Firestore
+    await adminDb.collection('inquiries').add({
+      ...inquiryData,
+      status: 'New',
+      threatLevel: 'Medium', // Default threat level, can be assessed by admin
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    });
     
     // Mock email notification
     console.log("New Inquiry Received:", inquiryData);
@@ -29,3 +34,29 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }
+
+export async function GET() {
+  try {
+    const snapshot = await adminDb.collection('inquiries').orderBy('createdAt', 'desc').get();
+    const inquiries = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        id: doc.id,
+        client: `${data.firstName || ''} ${data.lastName || ''}`.trim() || 'Anonymous',
+        service: data.service || 'Not Specified',
+        date: data.createdAt ? new Date(data.createdAt.seconds * 1000).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
+        status: data.status || 'New',
+        threatLevel: data.threatLevel || 'Medium',
+        phone: data.phone || '',
+        email: data.email || '',
+        details: data.details || ''
+      };
+    });
+    return NextResponse.json({ success: true, inquiries });
+  } catch (error) {
+    console.error("Error fetching inquiries:", error);
+    return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
+  }
+}
+
+
