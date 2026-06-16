@@ -96,6 +96,12 @@ function ContactForm() {
         <textarea required id="details" name="details" rows={4} className="w-full bg-black-950/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all resize-none" placeholder="Please provide brief details about your operational requirements, dates, and locations. All information is held in strict confidence." />
       </div>
 
+      {/* Honeypot field for basic bot protection */}
+      <div className="hidden" aria-hidden="true">
+        <label htmlFor="website">Website</label>
+        <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className="pt-2 flex items-center justify-between">
         <div className="flex items-center gap-2 text-sm text-gray-400">
           <Shield className="h-4 w-4 text-gold-500" />

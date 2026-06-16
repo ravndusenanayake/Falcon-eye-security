@@ -14,6 +14,16 @@ const mockInquiries = [
 export default function InquiriesPage() {
   const [searchTerm, setSearchTerm] = useState("");
 
+  const filteredInquiries = mockInquiries.filter(inquiry => {
+    const term = searchTerm.toLowerCase();
+    return (
+      inquiry.client.toLowerCase().includes(term) ||
+      inquiry.service.toLowerCase().includes(term) ||
+      inquiry.id.toLowerCase().includes(term) ||
+      inquiry.status.toLowerCase().includes(term)
+    );
+  });
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 justify-between">
@@ -50,11 +60,18 @@ export default function InquiriesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {mockInquiries.map((inquiry) => (
-                <tr key={inquiry.id} className="hover:bg-white/5 transition-colors">
-                  <td className="px-6 py-4 font-medium text-white">{inquiry.id}</td>
-                  <td className="px-6 py-4">{inquiry.client}</td>
-                  <td className="px-6 py-4">{inquiry.service}</td>
+              {filteredInquiries.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                    No inquiries found matching "{searchTerm}"
+                  </td>
+                </tr>
+              ) : (
+                filteredInquiries.map((inquiry) => (
+                  <tr key={inquiry.id} className="hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 font-medium text-white">{inquiry.id}</td>
+                    <td className="px-6 py-4">{inquiry.client}</td>
+                    <td className="px-6 py-4">{inquiry.service}</td>
                   <td className="px-6 py-4">
                     <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
                       inquiry.threatLevel === 'High' ? 'bg-red-400/10 text-red-400 ring-red-400/30' :
@@ -86,7 +103,7 @@ export default function InquiriesPage() {
                     </div>
                   </td>
                 </tr>
-              ))}
+              )))}
             </tbody>
           </table>
         </div>
