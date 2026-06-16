@@ -1,0 +1,70 @@
+import Link from "next/link";
+import { Shield, Globe, Link as LinkIcon, Mail, MapPin, Phone } from "lucide-react";
+
+export function Footer() {
+  return (
+    <footer className="bg-black-900 border-t border-white/5 pt-16 pb-8">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+          <div className="col-span-1 md:col-span-2">
+            <Link href="/" className="flex items-center gap-3 mb-6">
+              <Shield className="h-8 w-8 text-gold-500" />
+              <span className="text-2xl font-bold tracking-tight text-white uppercase">
+                Falcon Eye <span className="text-gold-500">Security</span>
+              </span>
+            </Link>
+            <p className="text-gray-400 max-w-md leading-relaxed">
+              Discreet, world-class security for High-Net-Worth Individuals, executives, diplomats, and high-profile events across Sri Lanka. Your safety is our highest priority.
+            </p>
+            <div className="flex gap-4 mt-8">
+              <a href="https://www.facebook.com/share/1BcAMeXY3e/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 text-gray-400 hover:text-gold-500 hover:bg-gold-500/10 transition-colors">
+                <Globe className="h-5 w-5" />
+              </a>
+              <a href="#" className="p-2 rounded-full bg-white/5 text-gray-400 hover:text-gold-500 hover:bg-gold-500/10 transition-colors">
+                <LinkIcon className="h-5 w-5" />
+              </a>
+            </div>
+          </div>
+          
+          <div>
+            <h3 className="text-white font-semibold mb-6">Services</h3>
+            <ul className="space-y-4">
+              <li><Link href="/services" className="text-gray-400 hover:text-gold-500 transition-colors">VIP Protection</Link></li>
+              <li><Link href="/services" className="text-gray-400 hover:text-gold-500 transition-colors">Executive Guarding</Link></li>
+              <li><Link href="/services" className="text-gray-400 hover:text-gold-500 transition-colors">Event Security</Link></li>
+              <li><Link href="/services" className="text-gray-400 hover:text-gold-500 transition-colors">Diplomat Escort</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-white font-semibold mb-6">Contact</h3>
+            <ul className="space-y-4">
+              <li className="flex items-start gap-3 text-gray-400">
+                <MapPin className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
+                <span>Colombo, Sri Lanka</span>
+              </li>
+              <li className="flex items-center gap-3 text-gray-400">
+                <Phone className="h-5 w-5 text-gold-500 shrink-0" />
+                <span>075 / 076 Numbers</span>
+              </li>
+              <li className="flex items-center gap-3 text-gray-400">
+                <Mail className="h-5 w-5 text-gold-500 shrink-0" />
+                <span>info@falconeyesecurity.lk</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-gray-500 text-sm">
+            &copy; {new Date().getFullYear()} Falcon Eye Security. All rights reserved.
+          </p>
+          <div className="flex gap-6 text-sm text-gray-500">
+            <Link href="#" className="hover:text-gold-500 transition-colors">Privacy Policy</Link>
+            <Link href="#" className="hover:text-gold-500 transition-colors">Terms of Service</Link>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
