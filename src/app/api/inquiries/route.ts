@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { adminDb } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
 import * as admin from "firebase-admin";
 
 export async function POST(request: Request) {
@@ -15,8 +15,14 @@ export async function POST(request: Request) {
     // Remove honeypot field before processing
     const { website, ...inquiryData } = body;
     
+    const db = getAdminDb();
+    if (!db) {
+      console.error("Firebase Admin is not configured. Cannot save inquiry.");
+      return NextResponse.json({ success: false, message: "Database connection not configured" }, { status: 500 });
+    }
+    
     // Add to Firestore
-    await adminDb.collection('inquiries').add({
+    await db.collection('inquiries').add({
       ...inquiryData,
       status: 'New',
       threatLevel: 'Medium', // Default threat level, can be assessed by admin
@@ -37,7 +43,13 @@ export async function POST(request: Request) {
 
 export async function GET() {
   try {
-    const snapshot = await adminDb.collection('inquiries').orderBy('createdAt', 'desc').get();
+    const db = getAdminDb();
+    if (!db) {
+      console.warn("Firebase Admin is not configured. Returning empty inquiries.");
+      return NextResponse.json({ success: true, inquiries: [] });
+    }
+    
+    const snapshot = await db.collection('inquiries').orderBy('createdAt', 'desc').get();
     const inquiries = snapshot.docs.map(doc => {
       const data = doc.data();
       return {
@@ -58,5 +70,6 @@ export async function GET() {
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
 }
+
 
 
