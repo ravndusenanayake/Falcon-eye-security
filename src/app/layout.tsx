@@ -28,7 +28,7 @@ export default function RootLayout({
         <MetaPixel />
       </head>
       <body className="min-h-screen flex flex-col bg-background text-foreground selection:bg-gold-500 selection:text-white pt-24 transition-colors duration-300">
-        <ThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
             <Navbar />
             <main className="flex-grow flex flex-col">{children}</main>
