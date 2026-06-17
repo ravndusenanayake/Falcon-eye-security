@@ -21,10 +21,10 @@ export function Navbar() {
       <nav className="flex items-center justify-between p-6 lg:px-8 max-w-7xl mx-auto" aria-label="Global">
         <div className="flex lg:flex-1">
           <Link href="/" className="-m-1.5 p-1.5 flex items-center gap-3 group">
-            <div className="p-2 bg-gold-500 rounded-lg text-black-950 group-hover:scale-105 transition-transform shadow-[0_0_15px_rgba(245,158,11,0.3)]">
-              <Shield className="h-6 w-6" />
+            <div className="relative h-12 w-12 group-hover:scale-105 transition-transform overflow-hidden rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)]">
+              <img src="/logo.jpg" alt="Falcon Eye Security Logo" className="object-cover w-full h-full" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-white uppercase">
+            <span className="text-xl font-bold tracking-tight text-white uppercase hidden sm:block">
               Falcon Eye <span className="text-gold-500">Security</span>
             </span>
           </Link>
@@ -66,7 +66,9 @@ export function Navbar() {
           <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-black-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
             <div className="flex items-center justify-between">
               <Link href="/" className="-m-1.5 p-1.5 flex items-center gap-3">
-                <Shield className="h-8 w-8 text-gold-500" />
+                <div className="relative h-10 w-10 overflow-hidden rounded-full shadow-[0_0_10px_rgba(245,158,11,0.3)]">
+                  <img src="/logo.jpg" alt="Falcon Eye Security Logo" className="object-cover w-full h-full" />
+                </div>
               </Link>
               <button
                 type="button"
