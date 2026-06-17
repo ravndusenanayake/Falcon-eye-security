@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const crypto = require('crypto');
 
 const envContent = fs.readFileSync(path.resolve(__dirname, '.env.local'), 'utf8');
 const lines = envContent.split('\n');
@@ -17,10 +16,8 @@ for (const line of lines) {
   }
 }
 
-try {
-  console.log('Key length:', privateKey.length);
-  const keyObject = crypto.createPrivateKey(privateKey);
-  console.log('Success! Key type:', keyObject.type);
-} catch (err) {
-  console.error('Crypto error:', err);
-}
+const keyLines = privateKey.split('\n');
+console.log('Total lines:', keyLines.length);
+keyLines.forEach((l, i) => {
+  console.log(`Line ${i + 1} length: ${l.length}, content preview: ${JSON.stringify(l)}`);
+});
