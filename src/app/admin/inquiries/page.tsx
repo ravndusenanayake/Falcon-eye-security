@@ -46,6 +46,27 @@ export default function InquiriesPage() {
     }
   };
 
+  const updateStatus = async (id: string, newStatus: string) => {
+    try {
+      const response = await fetch(`/api/inquiries/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (response.ok) {
+        setInquiries(inquiries.map(inq => inq.id === id ? { ...inq, status: newStatus } : inq));
+        if (selectedInquiry && selectedInquiry.id === id) {
+          setSelectedInquiry({ ...selectedInquiry, status: newStatus });
+        }
+      } else {
+        alert("Failed to update status");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error updating status");
+    }
+  };
+
   const filteredInquiries = inquiries.filter(inquiry => {
     const term = searchTerm.toLowerCase();
     return (
@@ -93,6 +114,7 @@ export default function InquiriesPage() {
               <tr>
                 <th scope="col" className="px-6 py-4">ID</th>
                 <th scope="col" className="px-6 py-4">Client</th>
+                <th scope="col" className="px-6 py-4">Phone</th>
                 <th scope="col" className="px-6 py-4">Service</th>
                 <th scope="col" className="px-6 py-4">Threat Level</th>
                 <th scope="col" className="px-6 py-4">Date</th>
@@ -103,7 +125,7 @@ export default function InquiriesPage() {
             <tbody className="divide-y divide-white/5">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-12 text-center text-gray-400">
+                  <td colSpan={8} className="px-6 py-12 text-center text-gray-400">
                     <div className="flex flex-col items-center justify-center gap-2">
                       <div className="h-6 w-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
                       <span>Loading secure database...</span>
@@ -112,7 +134,7 @@ export default function InquiriesPage() {
                 </tr>
               ) : filteredInquiries.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
                     {error ? "Setup environment variables to connect" : `No inquiries found matching "${searchTerm}"`}
                   </td>
                 </tr>
@@ -123,6 +145,7 @@ export default function InquiriesPage() {
                       {inquiry.id.substring(0, 8)}...
                     </td>
                     <td className="px-6 py-4">{inquiry.client}</td>
+                    <td className="px-6 py-4">{inquiry.phone}</td>
                     <td className="px-6 py-4">{inquiry.service}</td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset ${
@@ -246,6 +269,23 @@ export default function InquiriesPage() {
 
             {/* Footer */}
             <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
+              <div className="flex-1">
+                {selectedInquiry.status === 'New' && (
+                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Read')}>
+                    Mark as Read
+                  </Button>
+                )}
+                {selectedInquiry.status === 'Read' && (
+                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Quoted')}>
+                    Mark as Quoted
+                  </Button>
+                )}
+                {selectedInquiry.status === 'Quoted' && (
+                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Confirmed')}>
+                    Mark as Confirmed
+                  </Button>
+                )}
+              </div>
               <Button variant="secondary" onClick={() => setSelectedInquiry(null)}>
                 Close
               </Button>
