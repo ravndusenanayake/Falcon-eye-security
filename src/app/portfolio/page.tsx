@@ -28,8 +28,8 @@ export default function PortfolioPage() {
         const res = await fetch("/api/staff");
         const data = await res.json();
         if (data.success) {
-          // Filter to only show active members
-          setSquad(data.staff.filter((s: any) => s.status === 'Active'));
+          // Filter to show active and deployed members
+          setSquad(data.staff.filter((s: any) => s.status === 'Active' || s.status === 'On Deployment'));
         }
       } catch (error) {
         console.error("Failed to load squad", error);
