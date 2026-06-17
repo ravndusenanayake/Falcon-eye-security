@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Shield, LayoutDashboard, Inbox, Users, Calendar, DollarSign, LogOut } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { useEffect } from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -18,6 +20,33 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, loading, logout } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user && pathname !== "/admin/login") {
+      router.push("/admin/login");
+    }
+  }, [user, loading, pathname, router]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-black-950">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-10 w-10 border-4 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-gray-400 font-medium">Securing connection...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user && pathname !== "/admin/login") {
+    return null;
+  }
+
+  if (pathname === "/admin/login") {
+    return <div className="min-h-screen bg-black-950 flex items-center justify-center">{children}</div>;
+  }
 
   return (
     <div className="flex h-screen bg-black-950 overflow-hidden">
@@ -62,7 +91,10 @@ export default function AdminLayout({
               <p className="text-xs text-gray-500">owner@falcon.lk</p>
             </div>
           </div>
-          <button className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors">
+          <button 
+            onClick={logout}
+            className="flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors"
+          >
             <LogOut className="h-5 w-5 shrink-0" />
             Sign Out
           </button>
