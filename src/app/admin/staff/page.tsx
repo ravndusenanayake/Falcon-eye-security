@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { Search, Plus, Filter, Shield, Award, Phone, Check, X, AlertCircle, Upload } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebase/config";
 
 interface StaffMember {
   id: string;
@@ -79,9 +77,22 @@ export default function StaffPage() {
       
       if (imageFile) {
         setUploadingImage(true);
-        const storageRef = ref(storage, `staff/${Date.now()}_${imageFile.name}`);
-        const snapshot = await uploadBytes(storageRef, imageFile);
-        finalImageUrl = await getDownloadURL(snapshot.ref);
+        
+        const formData = new FormData();
+        formData.append("file", imageFile);
+        formData.append("upload_preset", "falcon eye");
+        
+        const cloudinaryRes = await fetch("https://api.cloudinary.com/v1_1/de81b81yk/image/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!cloudinaryRes.ok) {
+          throw new Error("Failed to upload image to Cloudinary");
+        }
+
+        const cloudinaryData = await cloudinaryRes.json();
+        finalImageUrl = cloudinaryData.secure_url;
       }
 
       const response = await fetch("/api/staff", {
