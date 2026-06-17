@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Plus, Filter, Shield, Award, Phone, Check, X, AlertCircle, Upload } from "lucide-react";
+import { Search, Plus, Filter, Shield, Award, Phone, Check, X, AlertCircle, Upload, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 interface StaffMember {
@@ -29,6 +29,7 @@ export default function StaffPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   // Form states
   const [name, setName] = useState("");
@@ -95,8 +96,11 @@ export default function StaffPage() {
         finalImageUrl = cloudinaryData.secure_url;
       }
 
-      const response = await fetch("/api/staff", {
-        method: "POST",
+      const url = editingId ? `/api/staff/${editingId}` : "/api/staff";
+      const method = editingId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method: method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
@@ -120,6 +124,7 @@ export default function StaffPage() {
         setImageUrl("");
         setImageFile(null);
         setSelectedCerts([]);
+        setEditingId(null);
         // Re-fetch
         fetchStaff();
       } else {
@@ -130,6 +135,35 @@ export default function StaffPage() {
       alert("Error saving staff member.");
     } finally {
       setUploadingImage(false);
+    }
+  };
+
+  const handleEdit = (member: StaffMember) => {
+    setEditingId(member.id);
+    setName(member.name);
+    setRole(member.role);
+    setExperience(member.experience);
+    setContact(member.contact);
+    setStatus(member.status);
+    setImageUrl(member.imageUrl || "");
+    setSelectedCerts(member.certifications);
+    setImageFile(null);
+    setIsModalOpen(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this staff member?")) return;
+    
+    try {
+      const response = await fetch(`/api/staff/${id}`, { method: "DELETE" });
+      if (response.ok) {
+        fetchStaff();
+      } else {
+        alert("Failed to delete staff member.");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error deleting staff member.");
     }
   };
 
@@ -183,7 +217,18 @@ export default function StaffPage() {
           <Button variant="secondary" onClick={handleSeedData} className="flex-1 sm:flex-none">
             Seed Demo Squad
           </Button>
-          <Button onClick={() => setIsModalOpen(true)} className="flex-1 sm:flex-none">
+          <Button onClick={() => {
+            setEditingId(null);
+            setName("");
+            setRole("Security Officer");
+            setExperience("");
+            setContact("");
+            setStatus("Active");
+            setImageUrl("");
+            setImageFile(null);
+            setSelectedCerts([]);
+            setIsModalOpen(true);
+          }} className="flex-1 sm:flex-none">
             <Plus className="h-4 w-4 mr-2" />
             Add Guard
           </Button>
@@ -200,6 +245,7 @@ export default function StaffPage() {
                 <th scope="col" className="px-6 py-4">Certifications</th>
                 <th scope="col" className="px-6 py-4">Contact</th>
                 <th scope="col" className="px-6 py-4">Status</th>
+                <th scope="col" className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
@@ -214,7 +260,7 @@ export default function StaffPage() {
                 </tr>
               ) : filteredStaff.length === 0 ? (
                 <tr>
-                  <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
                     No active staff in the database. Click 'Seed Demo Squad' to populate initial profiles.
                   </td>
                 </tr>
@@ -273,6 +319,24 @@ export default function StaffPage() {
                         {member.status}
                       </span>
                     </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button 
+                          onClick={() => handleEdit(member)}
+                          className="p-1.5 text-gray-400 hover:text-gold-500 transition-colors rounded hover:bg-gold-500/10"
+                          title="Edit"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(member.id)}
+                          className="p-1.5 text-gray-400 hover:text-red-500 transition-colors rounded hover:bg-red-500/10"
+                          title="Delete"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))
               )}
@@ -287,7 +351,7 @@ export default function StaffPage() {
           <form onSubmit={handleSubmit} className="glass w-full max-w-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-black-900/50">
-              <h3 className="font-bold text-white text-lg">Add Roster Guard</h3>
+              <h3 className="font-bold text-white text-lg">{editingId ? "Edit Roster Guard" : "Add Roster Guard"}</h3>
               <button 
                 type="button"
                 onClick={() => setIsModalOpen(false)}
@@ -417,7 +481,7 @@ export default function StaffPage() {
                 Cancel
               </Button>
               <Button type="submit" disabled={uploadingImage}>
-                {uploadingImage ? "Uploading Image..." : "Add Guard"}
+                {uploadingImage ? "Uploading Image..." : (editingId ? "Update Guard" : "Add Guard")}
               </Button>
             </div>
           </form>
