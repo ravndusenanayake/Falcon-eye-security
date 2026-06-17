@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Shield, Users, Briefcase, ChevronRight, Phone } from "lucide-react";
+import { Shield, Users, Briefcase, ChevronRight, Phone, Camera } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { ImageSlider } from "@/components/ui/ImageSlider";
 
 export default function Home() {
   return (
@@ -170,6 +171,21 @@ export default function Home() {
               </div>
             </motion.div>
           </div>
+        </div>
+      </section>
+
+      {/* Image Gallery Section */}
+      <section className="py-24 bg-black-950 border-t border-white/5 relative">
+        <div className="absolute inset-0 bg-gold-500/5 opacity-50" />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center justify-center p-3 bg-gold-500/10 rounded-full mb-6">
+              <Camera className="h-6 w-6 text-gold-500" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Our Forces in Action</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto">Glimpses of our elite security personnel on deployment across various high-profile operations.</p>
+          </div>
+          <ImageSlider />
         </div>
       </section>
 
