@@ -12,6 +12,7 @@
   --color-gold-700: #B45309;
 
   /* Semantic UI Colors mapped to existing hardcoded classes */
+  --color-black-700: var(--border-color);
   --color-black-800: var(--surface-hover);
   --color-black-900: var(--surface);
   --color-black-950: var(--background);
