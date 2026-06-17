@@ -13,8 +13,31 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Falcon Eye Security | Elite VIP Protection",
+  title: "Falcon Eye Security | Elite VIP Protection & Corporate Security",
   description: "Discreet, world-class security for HNWIs, executives, diplomats & events. Providing premium security services in Sri Lanka.",
+  keywords: ["Security Company Sri Lanka", "VIP Protection", "Bodyguards", "Event Security", "Corporate Security", "Falcon Eye Security"],
+  openGraph: {
+    title: "Falcon Eye Security | Elite VIP Protection",
+    description: "Discreet, world-class security for HNWIs, executives, diplomats & events.",
+    url: "https://falconeyesecurity.com",
+    siteName: "Falcon Eye Security",
+    images: [
+      {
+        url: "https://images.unsplash.com/photo-1582136014387-a2928509e51c?q=80&w=2070&auto=format&fit=crop", 
+        width: 1200,
+        height: 630,
+        alt: "Falcon Eye Security Operations",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Falcon Eye Security | Elite VIP Protection",
+    description: "Premium security services in Sri Lanka. VIP Protection, Corporate Security, and Event Security.",
+    images: ["https://images.unsplash.com/photo-1582136014387-a2928509e51c?q=80&w=2070&auto=format&fit=crop"],
+  },
 };
 
 export default function RootLayout({
