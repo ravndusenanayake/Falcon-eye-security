@@ -154,8 +154,8 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400 font-medium">Operations Line (24/7)</p>
-                    <a href="tel:0750000000" className="text-lg text-white hover:text-gold-500 transition-colors">075 XXX XXXX</a>
-                    <p className="text-xs text-gold-500 mt-1">WhatsApp Available</p>
+                    <a href="tel:0767722412" className="text-lg text-white hover:text-gold-500 transition-colors block">076 772 2412</a>
+                    <a href="https://wa.me/94756322412" target="_blank" rel="noopener noreferrer" className="text-sm text-gold-500 hover:text-gold-400 transition-colors block mt-1">WhatsApp: 075 632 2412</a>
                   </div>
                 </div>
 
