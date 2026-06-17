@@ -90,7 +90,7 @@ body {
 
 /* Base heading styles */
 h1, h2, h3, h4, h5, h6 {
-  color: #FFFFFF;
+  color: var(--text-primary);
   font-weight: 700;
   letter-spacing: -0.02em;
 }
