@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Shield, LayoutDashboard, Inbox, Users, Calendar, DollarSign, LogOut } from "lucide-react";
+import { Shield, LayoutDashboard, Inbox, Users, Calendar, DollarSign, LogOut, Radio, AlertTriangle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect } from "react";
 
@@ -11,6 +11,8 @@ const navigation = [
   { name: "Inquiries", href: "/admin/inquiries", icon: Inbox },
   { name: "Staff", href: "/admin/staff", icon: Users },
   { name: "Deployments", href: "/admin/deployments", icon: Calendar },
+  { name: "Assets & Devices", href: "/admin/devices", icon: Radio },
+  { name: "Incidents", href: "/admin/incidents", icon: AlertTriangle },
   { name: "Finance", href: "/admin/finance", icon: DollarSign },
 ];
 
