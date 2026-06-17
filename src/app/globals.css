@@ -11,17 +11,50 @@
   --color-gold-600: #D97706;
   --color-gold-700: #B45309;
 
-  /* Black/Dark Gray Colors */
-  --color-black-800: #1F2937;
-  --color-black-900: #111827;
-  --color-black-950: #030712;
+  /* Semantic UI Colors mapped to existing hardcoded classes */
+  --color-black-800: var(--surface-hover);
+  --color-black-900: var(--surface);
+  --color-black-950: var(--background);
+  
+  --color-white: var(--text-primary);
+  --color-gray-200: var(--text-secondary);
+  --color-gray-300: var(--text-tertiary);
+  --color-gray-400: var(--text-muted);
+  --color-gray-500: var(--border-color);
 
   --font-sans: var(--font-inter);
 }
 
 :root {
+  /* Light Mode Palette */
+  --background: #F9FAFB;
+  --foreground: #111827;
+  
+  --surface: #FFFFFF;
+  --surface-hover: #F3F4F6;
+  
+  --text-primary: #111827;
+  --text-secondary: #374151;
+  --text-tertiary: #4B5563;
+  --text-muted: #6B7280;
+  
+  --border-color: #E5E7EB;
+}
+
+.dark {
+  /* Dark Mode Palette */
   --background: #030712;
   --foreground: #F3F4F6;
+  
+  --surface: #111827;
+  --surface-hover: #1F2937;
+  
+  --text-primary: #FFFFFF;
+  --text-secondary: #E5E7EB;
+  --text-tertiary: #D1D5DB;
+  --text-muted: #9CA3AF;
+  
+  --border-color: rgba(255, 255, 255, 0.1);
 }
 
 body {
@@ -34,17 +67,25 @@ body {
 
 /* Glassmorphism utility classes */
 @utility glass {
-  background: rgba(17, 24, 39, 0.7);
+  background: var(--surface);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+}
+
+.dark .glass {
+  background: rgba(17, 24, 39, 0.7);
 }
 
 @utility glass-gold {
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(245, 158, 11, 0.05);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.dark .glass-gold {
+  background: rgba(245, 158, 11, 0.1);
 }
 
 /* Base heading styles */

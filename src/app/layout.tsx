@@ -4,6 +4,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MetaPixel } from "@/components/MetaPixel";
 import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -22,16 +23,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} scroll-smooth antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} scroll-smooth antialiased`}>
       <head>
         <MetaPixel />
       </head>
-      <body className="min-h-screen flex flex-col bg-black-950 text-foreground selection:bg-gold-500 selection:text-white pt-24">
-        <AuthProvider>
-          <Navbar />
-          <main className="flex-grow flex flex-col">{children}</main>
-          <Footer />
-        </AuthProvider>
+      <body className="min-h-screen flex flex-col bg-background text-foreground selection:bg-gold-500 selection:text-white pt-24 transition-colors duration-300">
+        <ThemeProvider>
+          <AuthProvider>
+            <Navbar />
+            <main className="flex-grow flex flex-col">{children}</main>
+            <Footer />
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
