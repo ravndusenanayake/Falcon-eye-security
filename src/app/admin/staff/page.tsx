@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Plus, Filter, Shield, Award, Phone, Check, X, AlertCircle } from "lucide-react";
+import { Search, Plus, Filter, Shield, Award, Phone, Check, X, AlertCircle, Upload } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "@/lib/firebase/config";
 
 interface StaffMember {
   id: string;
@@ -12,6 +14,7 @@ interface StaffMember {
   contact: string;
   status: string;
   certifications: string[];
+  imageUrl?: string;
 }
 
 const defaultCertifications = [
@@ -35,6 +38,9 @@ export default function StaffPage() {
   const [experience, setExperience] = useState("");
   const [contact, setContact] = useState("");
   const [status, setStatus] = useState("Active");
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedCerts, setSelectedCerts] = useState<string[]>([]);
 
   useEffect(() => {
@@ -69,6 +75,15 @@ export default function StaffPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      let finalImageUrl = imageUrl;
+      
+      if (imageFile) {
+        setUploadingImage(true);
+        const storageRef = ref(storage, `staff/${Date.now()}_${imageFile.name}`);
+        const snapshot = await uploadBytes(storageRef, imageFile);
+        finalImageUrl = await getDownloadURL(snapshot.ref);
+      }
+
       const response = await fetch("/api/staff", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -78,6 +93,7 @@ export default function StaffPage() {
           experience,
           contact,
           status,
+          imageUrl: finalImageUrl,
           certifications: selectedCerts
         })
       });
@@ -90,6 +106,8 @@ export default function StaffPage() {
         setExperience("");
         setContact("");
         setStatus("Active");
+        setImageUrl("");
+        setImageFile(null);
         setSelectedCerts([]);
         // Re-fetch
         fetchStaff();
@@ -99,16 +117,18 @@ export default function StaffPage() {
     } catch (error) {
       console.error(error);
       alert("Error saving staff member.");
+    } finally {
+      setUploadingImage(false);
     }
   };
 
   // Seed data function to quickly populate database for review
   const handleSeedData = async () => {
     const mockStaff = [
-      { name: "Suresh Silva", role: "VIP Bodyguard", experience: "8 years (Ex-Special Forces)", contact: "+94 77 123 4567", status: "Active", certifications: ["VIP Close Protection", "Weapons License", "First Aid Certified"] },
-      { name: "Ajith Kumara", role: "Tactical Officer", experience: "6 years (Ex-STF)", contact: "+94 77 987 6543", status: "Active", certifications: ["Weapons License", "Tactical Response"] },
-      { name: "Kamal Perera", role: "Security Officer", experience: "4 years", contact: "+94 76 555 4444", status: "Active", certifications: ["First Aid Certified"] },
-      { name: "Ranil Wickramasinghe", role: "Escort Driver", experience: "10 years (Defensive Driving Specialist)", contact: "+94 71 888 9999", status: "Active", certifications: ["Defensive Driving", "First Aid Certified"] },
+      { name: "Suresh Silva", role: "VIP Bodyguard", experience: "8 years (Ex-Special Forces)", contact: "+94 77 123 4567", status: "Active", certifications: ["VIP Close Protection", "Weapons License", "First Aid Certified"], imageUrl: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=1776&auto=format&fit=crop" },
+      { name: "Ajith Kumara", role: "Tactical Officer", experience: "6 years (Ex-STF)", contact: "+94 77 987 6543", status: "Active", certifications: ["Weapons License", "Tactical Response"], imageUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1887&auto=format&fit=crop" },
+      { name: "Kamal Perera", role: "Security Officer", experience: "4 years", contact: "+94 76 555 4444", status: "Active", certifications: ["First Aid Certified"], imageUrl: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1887&auto=format&fit=crop" },
+      { name: "Ranil Wickramasinghe", role: "Escort Driver", experience: "10 years (Defensive Driving Specialist)", contact: "+94 71 888 9999", status: "Active", certifications: ["Defensive Driving", "First Aid Certified"], imageUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1887&auto=format&fit=crop" },
     ];
 
     try {
@@ -266,18 +286,40 @@ export default function StaffPage() {
               </button>
             </div>
 
-            {/* Content */}
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-              <div className="space-y-1">
-                <label className="block text-xs text-gray-400 uppercase">Guard Name</label>
-                <input 
-                  required 
-                  type="text" 
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full bg-black-950 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-gold-500" 
-                  placeholder="e.g. Ruwan Gunasekara" 
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="block text-xs text-gray-400 uppercase">Guard Name</label>
+                  <input 
+                    required 
+                    type="text" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full bg-black-950 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-gold-500" 
+                    placeholder="e.g. Ruwan Gunasekara" 
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="block text-xs text-gray-400 uppercase">Image Upload</label>
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setImageFile(e.target.files[0]);
+                        }
+                      }}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer" 
+                    />
+                    <div className="w-full bg-black-950 border border-white/10 rounded-lg px-4 py-2 text-white flex items-center justify-between hover:border-gold-500/50 transition-colors">
+                      <span className="text-sm truncate">
+                        {imageFile ? imageFile.name : "Choose an image file..."}
+                      </span>
+                      <Upload className="h-4 w-4 text-gray-400" />
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -360,11 +402,11 @@ export default function StaffPage() {
 
             {/* Footer */}
             <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
-              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
+              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)} disabled={uploadingImage}>
                 Cancel
               </Button>
-              <Button type="submit">
-                Add Guard
+              <Button type="submit" disabled={uploadingImage}>
+                {uploadingImage ? "Uploading Image..." : "Add Guard"}
               </Button>
             </div>
           </form>

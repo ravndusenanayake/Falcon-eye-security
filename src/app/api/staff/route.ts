@@ -18,7 +18,8 @@ export async function GET() {
         experience: data.experience || "0 years",
         contact: data.contact || "",
         status: data.status || "Active",
-        certifications: data.certifications || []
+        certifications: data.certifications || [],
+        imageUrl: data.imageUrl || "https://images.unsplash.com/photo-1582136014387-a2928509e51c?q=80&w=2070&auto=format&fit=crop"
       };
     });
 
@@ -43,7 +44,8 @@ export async function POST(request: Request) {
       experience: body.experience || "1 year",
       contact: body.contact || "",
       status: body.status || "Active",
-      certifications: body.certifications || []
+      certifications: body.certifications || [],
+      imageUrl: body.imageUrl || "https://images.unsplash.com/photo-1582136014387-a2928509e51c?q=80&w=2070&auto=format&fit=crop"
     });
 
     return NextResponse.json({ success: true, id: docRef.id }, { status: 201 });

@@ -1,39 +1,16 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Shield, Star, Award, CheckCircle } from "lucide-react";
-
-// Placeholder data for portfolio
-const guards = [
-  {
-    id: 1,
-    name: "Officer D. Perera",
-    role: "Senior Close Protection Officer",
-    image: "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?q=80&w=1776&auto=format&fit=crop",
-    qualifications: ["Ex-Military", "Advanced VIP Escort", "Unarmed Combat Expert"],
-  },
-  {
-    id: 2,
-    name: "Officer M. Silva",
-    role: "Event Security Lead",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=1887&auto=format&fit=crop",
-    qualifications: ["Crowd Control Specialist", "Emergency First Responder", "Risk Assessment"],
-  },
-  {
-    id: 3,
-    name: "Officer R. Fernando",
-    role: "Tactical Response Unit",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1887&auto=format&fit=crop",
-    qualifications: ["Special Forces Background", "Advanced Firearms", "Defensive Driving"],
-  },
-  {
-    id: 4,
-    name: "Officer K. Jayasuriya",
-    role: "Corporate Security Specialist",
-    image: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?q=80&w=1887&auto=format&fit=crop",
-    qualifications: ["Asset Protection", "Surveillance Expert", "First Aid Certified"],
-  }
-];
+interface SquadMember {
+  id: string;
+  name: string;
+  role: string;
+  experience: string;
+  certifications: string[];
+  imageUrl: string;
+}
 
 const stats = [
   { label: "Active Guards", value: "50+", icon: Shield },
@@ -42,6 +19,27 @@ const stats = [
 ];
 
 export default function PortfolioPage() {
+  const [squad, setSquad] = useState<SquadMember[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSquad = async () => {
+      try {
+        const res = await fetch("/api/staff");
+        const data = await res.json();
+        if (data.success) {
+          // Filter to only show active members
+          setSquad(data.staff.filter((s: any) => s.status === 'Active'));
+        }
+      } catch (error) {
+        console.error("Failed to load squad", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSquad();
+  }, []);
+
   return (
     <div className="flex flex-col w-full min-h-screen bg-black-950">
       {/* Header */}
@@ -109,38 +107,49 @@ export default function PortfolioPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {guards.map((guard, index) => (
-              <motion.div
-                key={guard.id}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="group glass rounded-2xl overflow-hidden border border-white/5 hover:border-gold-500/30 transition-all duration-300"
-              >
-                <div className="aspect-[3/4] relative overflow-hidden bg-black-800">
-                  <div 
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-                    style={{ backgroundImage: `url(${guard.image})` }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black-950 via-black-950/40 to-transparent" />
-                  
-                  <div className="absolute bottom-0 left-0 w-full p-6">
-                    <h3 className="text-xl font-bold text-white mb-1">{guard.name}</h3>
-                    <p className="text-gold-500 text-sm font-medium mb-4">{guard.role}</p>
+            {loading ? (
+              <div className="col-span-full py-12 text-center text-gold-500 flex flex-col items-center justify-center">
+                <div className="h-8 w-8 border-2 border-gold-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p>Loading squad roster...</p>
+              </div>
+            ) : squad.length === 0 ? (
+              <div className="col-span-full py-12 text-center text-gray-400">
+                <p>No active squad members available at the moment.</p>
+              </div>
+            ) : (
+              squad.map((guard, index) => (
+                <motion.div
+                  key={guard.id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className="group glass rounded-2xl overflow-hidden border border-white/5 hover:border-gold-500/30 transition-all duration-300"
+                >
+                  <div className="aspect-[3/4] relative overflow-hidden bg-black-800">
+                    <div 
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                      style={{ backgroundImage: `url(${guard.imageUrl})` }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black-950 via-black-950/40 to-transparent" />
                     
-                    <ul className="space-y-2">
-                      {guard.qualifications.map((qual, qIdx) => (
-                        <li key={qIdx} className="flex items-start gap-2 text-xs text-gray-300">
-                          <CheckCircle className="h-3.5 w-3.5 text-gold-500 shrink-0 mt-0.5" />
-                          <span>{qual}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="absolute bottom-0 left-0 w-full p-6">
+                      <h3 className="text-xl font-bold text-white mb-1">{guard.name}</h3>
+                      <p className="text-gold-500 text-sm font-medium mb-4">{guard.role}</p>
+                      
+                      <ul className="space-y-2">
+                        {guard.certifications.slice(0, 3).map((qual, qIdx) => (
+                          <li key={qIdx} className="flex items-start gap-2 text-xs text-gray-300">
+                            <CheckCircle className="h-3.5 w-3.5 text-gold-500 shrink-0 mt-0.5" />
+                            <span>{qual}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              ))
+            )}
           </div>
         </div>
       </section>
