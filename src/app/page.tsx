@@ -63,7 +63,7 @@ export default function Home() {
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-            <a href="tel:0750000000">
+            <a href="https://wa.me/94756322412" target="_blank" rel="noopener noreferrer">
               <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8">
                 <Phone className="mr-2 h-5 w-5" />
                 WhatsApp Us
