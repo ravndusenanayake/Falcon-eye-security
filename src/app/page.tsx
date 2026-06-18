@@ -11,13 +11,22 @@ export default function Home() {
     <div className="flex flex-col w-full">
       {/* Hero Section */}
       <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image & Overlay */}
+        {/* Background Video & Overlay */}
         <div className="absolute inset-0 z-0">
-          {/* Placeholder for high quality background image */}
-          <div className="absolute inset-0 bg-black-950/80 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black-950/40 via-transparent to-black-950 z-10" />
-          {/* We'll use a placeholder div with a pattern until actual images are added */}
-          <div className="w-full h-full bg-[url('https://images.unsplash.com/photo-1541888078652-25912423376d?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center" />
+          <div className="absolute inset-0 bg-black-950/70 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black-950/30 via-transparent to-black-950 z-10" />
+          
+          <video 
+            autoPlay 
+            loop 
+            muted 
+            playsInline 
+            className="w-full h-full object-cover"
+          >
+            {/* Temporary cinematic stock video for demo. Replace with client's actual video in the public folder e.g. "/videos/hero.mp4" */}
+            <source src="https://cdn.pixabay.com/video/2021/08/21/85860-591703276_large.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
 
         <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8 text-center">
