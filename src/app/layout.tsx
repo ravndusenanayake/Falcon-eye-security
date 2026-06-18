@@ -50,7 +50,7 @@ export default function RootLayout({
       <head>
         <MetaPixel />
       </head>
-      <body className="min-h-screen flex flex-col bg-background text-foreground selection:bg-gold-500 selection:text-white pt-24 transition-colors duration-300">
+      <body className="min-h-screen flex flex-col bg-background text-foreground selection:bg-gold-500 selection:text-white transition-colors duration-300">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
             <Navbar />
