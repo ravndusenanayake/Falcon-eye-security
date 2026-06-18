@@ -10,76 +10,104 @@ export default function Home() {
   return (
     <div className="flex flex-col w-full">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background Video & Overlay */}
-        <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-black-950/70 z-10" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black-950/30 via-transparent to-black-950 z-10" />
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-black-950 pt-20 pb-16">
+        {/* Subtle background texture */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1541888078652-25912423376d?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black-950 via-black-950/90 to-black-950/40 z-10" />
+
+        <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8 w-full flex flex-col lg:flex-row items-center justify-between gap-12">
           
-          <video 
-            autoPlay 
-            loop 
-            muted 
-            playsInline 
-            className="w-full h-full object-cover"
-          >
-            {/* Temporary cinematic stock video for demo. Replace with client's actual video in the public folder e.g. "/videos/hero.mp4" */}
-            <source src="https://cdn.pixabay.com/video/2021/08/21/85860-591703276_large.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
+          {/* Left: Text Content */}
+          <div className="flex-1 text-center lg:text-left pt-10 lg:pt-0">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-gold mb-8"
+            >
+              <Shield className="h-4 w-4 text-gold-500" />
+              <span className="text-sm font-medium text-gold-400 uppercase tracking-wider">Premium Security Services</span>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 tracking-tight"
+            >
+              Discreet, World-Class <br className="hidden md:block" />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600">
+                Security
+              </span>
+            </motion.h1>
 
-        <div className="relative z-20 max-w-7xl mx-auto px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-gold mb-8"
-          >
-            <Shield className="h-4 w-4 text-gold-500" />
-            <span className="text-sm font-medium text-gold-400 uppercase tracking-wider">Premium Security Services</span>
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight"
-          >
-            Discreet, World-Class <br className="hidden md:block" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600">
-              Security
-            </span>
-          </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed"
+            >
+              For High-Net-Worth Individuals, executives, diplomats & high-profile events. Elite protection deployed across Sri Lanka.
+            </motion.p>
 
-          <motion.p 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto font-light leading-relaxed"
-          >
-            For High-Net-Worth Individuals, executives, diplomats & high-profile events. Elite protection deployed across Sri Lanka.
-          </motion.p>
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+            >
+              <Link href="/contact">
+                <Button size="lg" className="w-full sm:w-auto text-lg px-8">
+                  Hire Us
+                  <ChevronRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <a href="https://wa.me/94756322412" target="_blank" rel="noopener noreferrer">
+                <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8">
+                  <Phone className="mr-2 h-5 w-5" />
+                  WhatsApp Us
+                </Button>
+              </a>
+            </motion.div>
+          </div>
 
+          {/* Right: Vertical Reel Video Container */}
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+            initial={{ opacity: 0, scale: 0.9, rotate: 2 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="flex-none relative w-full max-w-[320px] sm:max-w-[360px] aspect-[9/16] rounded-[2rem] overflow-hidden border-[6px] border-white/5 shadow-[0_0_60px_rgba(234,179,8,0.15)] bg-black-900 group"
           >
-            <Link href="/contact">
-              <Button size="lg" className="w-full sm:w-auto text-lg px-8">
-                Hire Us
-                <ChevronRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <a href="https://wa.me/94756322412" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto text-lg px-8">
-                <Phone className="mr-2 h-5 w-5" />
-                WhatsApp Us
-              </Button>
-            </a>
+            <div className="absolute inset-0 bg-gradient-to-t from-black-950/90 via-transparent to-black-950/30 z-10" />
+            
+            <video 
+              autoPlay 
+              loop 
+              muted 
+              playsInline 
+              className="absolute inset-0 w-full h-full object-cover z-0 transition-transform duration-700 group-hover:scale-105"
+            >
+              <source src="https://res.cloudinary.com/de81b81yk/video/upload/q_auto/f_auto/v1781763869/hero_u6bonl.mp4" type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+
+            {/* Floating UI Elements on the Video */}
+            <div className="absolute top-6 right-6 z-20">
+              <div className="bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
+                <span className="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" /> Live
+                </span>
+              </div>
+            </div>
+
+            <div className="absolute bottom-8 left-6 right-6 z-20">
+              <div className="glass-gold p-4 rounded-xl border border-gold-500/30">
+                <p className="text-sm font-semibold text-white mb-1">Falcon Eye Squads</p>
+                <p className="text-xs text-gold-400">On Duty 24/7</p>
+              </div>
+            </div>
           </motion.div>
+
         </div>
       </section>
 
