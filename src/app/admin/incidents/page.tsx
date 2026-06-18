@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, AlertTriangle, ShieldAlert, Clock, CheckCircle2, Filter } from "lucide-react";
+import { Plus, Search, AlertTriangle, ShieldAlert, Clock, CheckCircle2, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
-// Mock Data for Incidents
-const mockIncidents = [
+const initialMockIncidents = [
   { id: "INC-2023-001", title: "Unauthorized Access Attempt", severity: "Critical", status: "Open", location: "Sector 7G", reportedBy: "Sensor A", time: "10 mins ago" },
   { id: "INC-2023-002", title: "Perimeter Breach (Suspected animal)", severity: "Low", status: "Resolved", location: "North Fence", reportedBy: "Drone X", time: "2 hrs ago" },
   { id: "INC-2023-003", title: "Camera Offline Alert", severity: "Medium", status: "In Progress", location: "Main Gate", reportedBy: "System", time: "1 day ago" },
@@ -14,12 +13,45 @@ const mockIncidents = [
 ];
 
 export default function IncidentsPage() {
+  const [incidents, setIncidents] = useState(initialMockIncidents);
   const [searchQuery, setSearchQuery] = useState("");
+  
+  // Filter States
+  const [showFilters, setShowFilters] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [severityFilter, setSeverityFilter] = useState("All");
 
-  const filteredIncidents = mockIncidents.filter(inc => 
-    inc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    inc.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Modal States
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newIncident, setNewIncident] = useState({
+    title: "",
+    severity: "Medium",
+    location: "",
+    reportedBy: "Manual Entry"
+  });
+
+  const filteredIncidents = incidents.filter(inc => {
+    const matchesSearch = inc.title.toLowerCase().includes(searchQuery.toLowerCase()) || inc.id.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === "All" || inc.status === statusFilter;
+    const matchesSeverity = severityFilter === "All" || inc.severity === severityFilter;
+    return matchesSearch && matchesStatus && matchesSeverity;
+  });
+
+  const handleReportIncident = (e: React.FormEvent) => {
+    e.preventDefault();
+    const incident = {
+      id: `INC-2023-00${incidents.length + 1}`,
+      title: newIncident.title,
+      severity: newIncident.severity,
+      status: "Open",
+      location: newIncident.location,
+      reportedBy: newIncident.reportedBy,
+      time: "Just now"
+    };
+    setIncidents([incident, ...incidents]);
+    setIsModalOpen(false);
+    setNewIncident({ title: "", severity: "Medium", location: "", reportedBy: "Manual Entry" });
+  };
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
@@ -55,16 +87,49 @@ export default function IncidentsPage() {
           />
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => alert('Filter options coming soon!')}>
+          <Button variant={showFilters ? "default" : "outline"} className="flex-1 sm:flex-none" onClick={() => setShowFilters(!showFilters)}>
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
-          <Button className="flex-1 sm:flex-none bg-red-600 hover:bg-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]" onClick={() => alert('Report incident form coming soon!')}>
+          <Button className="flex-1 sm:flex-none bg-red-600 hover:bg-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]" onClick={() => setIsModalOpen(true)}>
             <ShieldAlert className="h-4 w-4 mr-2" />
             Report Incident
           </Button>
         </div>
       </div>
+
+      {/* Filter Panel */}
+      {showFilters && (
+        <div className="glass p-4 rounded-xl border border-white/5 flex flex-wrap gap-4 animate-in fade-in slide-in-from-top-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-gray-400">Status</label>
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-black-900 border border-white/10 text-sm rounded-lg block w-full p-2.5 text-white focus:ring-gold-500 focus:border-gold-500 outline-none"
+            >
+              <option value="All">All Statuses</option>
+              <option value="Open">Open</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-gray-400">Severity</label>
+            <select 
+              value={severityFilter}
+              onChange={(e) => setSeverityFilter(e.target.value)}
+              className="bg-black-900 border border-white/10 text-sm rounded-lg block w-full p-2.5 text-white focus:ring-gold-500 focus:border-gold-500 outline-none"
+            >
+              <option value="All">All Severities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       {/* Kanban / Cards Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -105,10 +170,79 @@ export default function IncidentsPage() {
           <div className="col-span-full p-12 text-center glass rounded-xl border-dashed border-white/10">
             <ShieldAlert className="h-12 w-12 text-gray-600 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-white mb-2">No Incidents Found</h3>
-            <p className="text-gray-400">There are no incidents matching your search criteria.</p>
+            <p className="text-gray-400">There are no incidents matching your criteria.</p>
           </div>
         )}
       </div>
+
+      {/* Report Incident Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-950/80 backdrop-blur-sm p-4">
+          <div className="bg-black-900 border border-white/10 rounded-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95">
+            <div className="flex items-center justify-between p-6 border-b border-white/5">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <ShieldAlert className="h-5 w-5 text-red-500" />
+                Report New Incident
+              </h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleReportIncident} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Incident Title</label>
+                <Input 
+                  required
+                  placeholder="e.g. Unauthorized access at Sector 4"
+                  value={newIncident.title}
+                  onChange={e => setNewIncident({...newIncident, title: e.target.value})}
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Severity</label>
+                  <select 
+                    value={newIncident.severity}
+                    onChange={e => setNewIncident({...newIncident, severity: e.target.value})}
+                    className="bg-black-950 border border-white/10 text-sm rounded-lg block w-full p-2.5 text-white focus:ring-gold-500 focus:border-gold-500 outline-none"
+                  >
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1.5">Location</label>
+                  <Input 
+                    required
+                    placeholder="e.g. Main Gate"
+                    value={newIncident.location}
+                    onChange={e => setNewIncident({...newIncident, location: e.target.value})}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Reported By</label>
+                <Input 
+                  required
+                  placeholder="e.g. Guard John Doe or Camera 5"
+                  value={newIncident.reportedBy}
+                  onChange={e => setNewIncident({...newIncident, reportedBy: e.target.value})}
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-6 border-t border-white/5 mt-6">
+                <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                <Button type="submit" className="bg-red-600 hover:bg-red-500 text-white">Submit Report</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
