@@ -87,7 +87,7 @@ export default function IncidentsPage() {
           />
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button variant={showFilters ? "default" : "outline"} className="flex-1 sm:flex-none" onClick={() => setShowFilters(!showFilters)}>
+          <Button variant={showFilters ? "primary" : "outline"} className="flex-1 sm:flex-none" onClick={() => setShowFilters(!showFilters)}>
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
