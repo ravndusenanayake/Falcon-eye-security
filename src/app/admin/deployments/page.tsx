@@ -240,7 +240,7 @@ export default function DeploymentsPage() {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="block text-xs text-gray-400 uppercase">Service Type</label>
                   <select 
@@ -267,7 +267,7 @@ export default function DeploymentsPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="block text-xs text-gray-400 uppercase">Start Date</label>
                   <input 

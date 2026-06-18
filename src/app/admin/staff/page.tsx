@@ -362,7 +362,7 @@ export default function StaffPage() {
             </div>
 
             <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="block text-xs text-gray-400 uppercase">Guard Name</label>
                   <input 
@@ -397,7 +397,7 @@ export default function StaffPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="block text-xs text-gray-400 uppercase">Role</label>
                   <select 
@@ -425,7 +425,7 @@ export default function StaffPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="block text-xs text-gray-400 uppercase">Experience</label>
                   <input 

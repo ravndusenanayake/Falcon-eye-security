@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Shield, LayoutDashboard, Inbox, Users, Calendar, DollarSign, LogOut, Radio, AlertTriangle } from "lucide-react";
+import { Shield, LayoutDashboard, Inbox, Users, Calendar, DollarSign, LogOut, Radio, AlertTriangle, Menu, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -24,12 +24,18 @@ export default function AdminLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading, logout } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!loading && !user && pathname !== "/admin/login") {
       router.push("/admin/login");
     }
   }, [user, loading, pathname, router]);
+
+  // Close mobile menu when route changes
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
 
   if (loading) {
     return (
@@ -52,15 +58,29 @@ export default function AdminLayout({
 
   return (
     <div className="flex h-screen bg-black-950 overflow-hidden">
+      {/* Mobile overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
-      <aside className="w-64 bg-black-900 border-r border-white/5 flex flex-col">
-        <div className="h-16 flex items-center px-6 border-b border-white/5">
+      <aside className={`fixed inset-y-0 left-0 z-50 w-64 bg-black-900 border-r border-white/5 flex flex-col transform transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className="h-16 flex items-center justify-between px-6 border-b border-white/5">
           <Link href="/" className="flex items-center gap-3">
             <Shield className="h-6 w-6 text-gold-500" />
             <span className="text-lg font-bold tracking-tight text-white uppercase">
-              Admin Portal
+              Admin
             </span>
           </Link>
+          <button 
+            className="lg:hidden text-gray-400 hover:text-white"
+            onClick={() => setIsMobileMenuOpen(false)}
+          >
+            <X className="h-6 w-6" />
+          </button>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
@@ -88,9 +108,9 @@ export default function AdminLayout({
             <div className="w-8 h-8 rounded-full bg-gold-500 flex items-center justify-center text-black-950 font-bold">
               SA
             </div>
-            <div>
-              <p className="text-sm font-medium text-white">Super Admin</p>
-              <p className="text-xs text-gray-500">owner@falcon.lk</p>
+            <div className="overflow-hidden">
+              <p className="text-sm font-medium text-white truncate">Super Admin</p>
+              <p className="text-xs text-gray-500 truncate">owner@falcon.lk</p>
             </div>
           </div>
           <button 
@@ -104,13 +124,19 @@ export default function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="h-16 border-b border-white/5 bg-black-900/50 backdrop-blur-md flex items-center px-8 shrink-0">
-          <h1 className="text-xl font-semibold text-white">
+      <main className="flex-1 flex flex-col min-w-0 overflow-hidden w-full">
+        <header className="h-16 border-b border-white/5 bg-black-900/50 backdrop-blur-md flex items-center px-4 lg:px-8 shrink-0 gap-4">
+          <button 
+            className="lg:hidden text-gray-400 hover:text-white"
+            onClick={() => setIsMobileMenuOpen(true)}
+          >
+            <Menu className="h-6 w-6" />
+          </button>
+          <h1 className="text-xl font-semibold text-white truncate">
             {navigation.find(n => pathname === n.href || pathname.startsWith(`${n.href}/`))?.name || "Dashboard"}
           </h1>
         </header>
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-y-auto p-4 lg:p-8">
           {children}
         </div>
       </main>
