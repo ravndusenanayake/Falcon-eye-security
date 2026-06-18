@@ -1,7 +1,16 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Shield, Globe, Link as LinkIcon, Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   return (
     <footer className="bg-black-900 border-t border-white/5 pt-16 pb-8">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">

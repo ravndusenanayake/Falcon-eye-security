@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, Shield } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
@@ -15,6 +16,11 @@ const navigation = [
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 glass border-b border-white/5">
