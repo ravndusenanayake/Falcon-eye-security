@@ -40,7 +40,7 @@ export function Navbar() {
             <ThemeToggle />
             <button
               type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-300 hover:text-white"
+              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-300 hover:text-white relative z-50 pointer-events-auto"
               onClick={() => setMobileMenuOpen(true)}
             >
               <span className="sr-only">Open main menu</span>
@@ -69,8 +69,8 @@ export function Navbar() {
         {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="lg:hidden" role="dialog" aria-modal="true">
-            <div className="fixed inset-0 z-50 bg-black-950/80 backdrop-blur-sm" />
-            <div className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-black-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
+            <div className="fixed inset-0 z-[60] bg-black-950/80 backdrop-blur-sm" />
+            <div className="fixed inset-y-0 right-0 z-[60] w-full overflow-y-auto bg-black-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
               <div className="flex items-center justify-between">
                 <Link href="/" className="-m-1.5 p-1.5 flex items-center gap-3">
                   <div className="relative h-10 w-10 overflow-hidden rounded-full shadow-[0_0_10px_rgba(245,158,11,0.3)]">

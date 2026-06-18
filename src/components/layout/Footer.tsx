@@ -38,10 +38,10 @@ export function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-6">Services</h3>
             <ul className="space-y-4">
-              <li><Link href="/services" className="text-gray-400 hover:text-gold-500 transition-colors">VIP Protection</Link></li>
-              <li><Link href="/services" className="text-gray-400 hover:text-gold-500 transition-colors">Executive Guarding</Link></li>
-              <li><Link href="/services" className="text-gray-400 hover:text-gold-500 transition-colors">Event Security</Link></li>
-              <li><Link href="/services" className="text-gray-400 hover:text-gold-500 transition-colors">Diplomat Escort</Link></li>
+              <li><Link href="/services#close-protection-bodyguards" className="text-gray-400 hover:text-gold-500 transition-colors">VIP Protection</Link></li>
+              <li><Link href="/services#vip-escort-services" className="text-gray-400 hover:text-gold-500 transition-colors">Executive Guarding</Link></li>
+              <li><Link href="/services#event-security" className="text-gray-400 hover:text-gold-500 transition-colors">Event Security</Link></li>
+              <li><Link href="/services#venue-protection" className="text-gray-400 hover:text-gold-500 transition-colors">Diplomat Escort</Link></li>
             </ul>
           </div>
 

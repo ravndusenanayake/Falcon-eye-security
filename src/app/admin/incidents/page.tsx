@@ -55,11 +55,11 @@ export default function IncidentsPage() {
           />
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button variant="outline" className="flex-1 sm:flex-none">
+          <Button variant="outline" className="flex-1 sm:flex-none" onClick={() => alert('Filter options coming soon!')}>
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
-          <Button className="flex-1 sm:flex-none bg-red-600 hover:bg-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]">
+          <Button className="flex-1 sm:flex-none bg-red-600 hover:bg-red-500 text-white shadow-[0_0_15px_rgba(220,38,38,0.3)]" onClick={() => alert('Report incident form coming soon!')}>
             <ShieldAlert className="h-4 w-4 mr-2" />
             Report Incident
           </Button>

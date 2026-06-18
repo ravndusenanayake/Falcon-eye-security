@@ -104,7 +104,10 @@ export default function DevicesPage() {
                   <td className="px-6 py-4 text-gray-400">{device.location}</td>
                   <td className="px-6 py-4 text-gray-400">{device.lastPing}</td>
                   <td className="px-6 py-4 text-right">
-                    <button className="text-gray-500 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10">
+                    <button 
+                      onClick={() => alert(`Actions menu for ${device.name} coming soon!`)}
+                      className="text-gray-500 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+                    >
                       <MoreVertical className="h-4 w-4" />
                     </button>
                   </td>

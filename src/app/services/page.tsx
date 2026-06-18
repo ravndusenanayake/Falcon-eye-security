@@ -89,7 +89,11 @@ export default function ServicesPage() {
 
                 <div className="space-y-8">
                   {category.services.map((service, sIndex) => (
-                    <div key={sIndex} className="bg-black-900/50 p-6 rounded-xl border border-white/5 hover:border-gold-500/30 transition-colors">
+                    <div 
+                      key={sIndex} 
+                      id={service.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}
+                      className="bg-black-900/50 p-6 rounded-xl border border-white/5 hover:border-gold-500/30 transition-colors scroll-mt-32"
+                    >
                       <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
                         <CheckCircle2 className="h-5 w-5 text-gold-500" />
                         {service.name}
