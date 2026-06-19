@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, Calendar, Shield, MapPin, Users, Check, X, AlertCircle } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Calendar, Shield, MapPin, Users, Check, X, AlertCircle, MoreVertical, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 interface Guard {
@@ -35,6 +35,21 @@ export default function DeploymentsPage() {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [selectedGuards, setSelectedGuards] = useState<string[]>([]);
+
+  // Action Menu & Edit States
+  const [actionMenuOpen, setActionMenuOpen] = useState<string | null>(null);
+  const [editingDeployment, setEditingDeployment] = useState<Deployment | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setActionMenuOpen(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -114,6 +129,54 @@ export default function DeploymentsPage() {
     }
   };
 
+  const handleUpdateDeployment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingDeployment) return;
+
+    if (new Date(editingDeployment.startDate) > new Date(editingDeployment.endDate)) {
+      alert("Start Date cannot be later than End Date");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/deployments/${editingDeployment.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingDeployment)
+      });
+
+      if (response.ok) {
+        setEditingDeployment(null);
+        fetchData();
+      } else {
+        alert("Failed to update deployment.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error updating deployment.");
+    }
+  };
+
+  const handleDeleteDeployment = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this deployment?")) return;
+
+    try {
+      const response = await fetch(`/api/deployments/${id}`, {
+        method: "DELETE"
+      });
+
+      if (response.ok) {
+        setActionMenuOpen(null);
+        fetchData();
+      } else {
+        alert("Failed to delete deployment.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error deleting deployment.");
+    }
+  };
+
   const handleSeedDeployments = async () => {
     const demoDeployments = [
       { clientName: "Mr. Rajapaksa", serviceType: "VIP Close Protection", location: "Private Estate, Colombo 7", startDate: "2026-06-18", endDate: "2026-06-25", guardsAssigned: ["Suresh Silva", "Ajith Kumara"], status: "Active" },
@@ -168,16 +231,50 @@ export default function DeploymentsPage() {
               <div className="space-y-4">
                 {/* Header */}
                 <div className="flex justify-between items-start">
-                  <div>
+                  <div className="pr-2">
                     <h4 className="font-bold text-white text-lg">{dep.clientName}</h4>
                     <p className="text-xs text-gold-500 font-semibold">{dep.serviceType}</p>
                   </div>
-                  <span className={`inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${
-                    dep.status === 'Active' ? 'bg-green-400/10 text-green-400 ring-green-400/30' :
-                    'bg-blue-400/10 text-blue-400 ring-blue-400/30'
-                  }`}>
-                    {dep.status}
-                  </span>
+                  <div className="flex items-center gap-2 relative">
+                    <span className={`inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold ring-1 ring-inset ${
+                      dep.status === 'Active' ? 'bg-green-400/10 text-green-400 ring-green-400/30' :
+                      dep.status === 'Completed' ? 'bg-gray-400/10 text-gray-400 ring-gray-400/30' :
+                      'bg-blue-400/10 text-blue-400 ring-blue-400/30'
+                    }`}>
+                      {dep.status}
+                    </span>
+                    <button 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActionMenuOpen(actionMenuOpen === dep.id ? null : dep.id);
+                      }}
+                      className="text-gray-500 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/10"
+                    >
+                      <MoreVertical className="h-4 w-4" />
+                    </button>
+
+                    {actionMenuOpen === dep.id && (
+                      <div ref={menuRef} className="absolute right-0 top-8 w-40 bg-black-800 border border-white/10 rounded-lg shadow-xl z-10 overflow-hidden animate-in fade-in zoom-in-95">
+                        <button
+                          onClick={() => {
+                            setEditingDeployment(dep);
+                            setActionMenuOpen(null);
+                          }}
+                          className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white flex items-center gap-2"
+                        >
+                          <Edit2 className="h-4 w-4 text-gray-400" />
+                          Edit Schedule
+                        </button>
+                        <button
+                          onClick={() => handleDeleteDeployment(dep.id)}
+                          className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 flex items-center gap-2 border-t border-white/5"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete Option
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {/* Date & Location */}
@@ -339,6 +436,150 @@ export default function DeploymentsPage() {
               </Button>
               <Button type="submit" disabled={guards.length === 0}>
                 Schedule Deployment
+              </Button>
+            </div>
+          </form>
+        </div>
+      )}
+
+      {/* Edit Deployment Modal */}
+      {editingDeployment && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <form onSubmit={handleUpdateDeployment} className="glass w-full max-w-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl animate-in fade-in zoom-in duration-200">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-black-900/50">
+              <h3 className="font-bold text-white text-lg flex items-center gap-2">
+                <Edit2 className="h-5 w-5 text-gold-500" />
+                Edit Deployment
+              </h3>
+              <button 
+                type="button"
+                onClick={() => setEditingDeployment(null)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto">
+              <div className="space-y-1">
+                <label className="block text-xs text-gray-400 uppercase">Client / Event Name</label>
+                <input 
+                  required 
+                  type="text" 
+                  value={editingDeployment.clientName}
+                  onChange={(e) => setEditingDeployment({...editingDeployment, clientName: e.target.value})}
+                  className="w-full bg-black-950 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-gold-500" 
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="block text-xs text-gray-400 uppercase">Service Type</label>
+                  <select 
+                    value={editingDeployment.serviceType}
+                    onChange={(e) => setEditingDeployment({...editingDeployment, serviceType: e.target.value})}
+                    className="w-full bg-black-950 border border-white/10 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-gold-500"
+                  >
+                    <option value="Personal Protection">Personal Protection</option>
+                    <option value="Corporate Security">Corporate Security</option>
+                    <option value="Diplomatic Escort">Diplomatic Escort</option>
+                    <option value="Special Venue Protection">Special Venue Protection</option>
+                  </select>
+                </div>
+                <div className="space-y-1">
+                  <label className="block text-xs text-gray-400 uppercase">Status</label>
+                  <select 
+                    value={editingDeployment.status}
+                    onChange={(e) => setEditingDeployment({...editingDeployment, status: e.target.value})}
+                    className="w-full bg-black-950 border border-white/10 rounded-lg px-3 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-gold-500"
+                  >
+                    <option value="Scheduled">Scheduled</option>
+                    <option value="Active">Active</option>
+                    <option value="Completed">Completed</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="block text-xs text-gray-400 uppercase">Location</label>
+                <input 
+                  required 
+                  type="text" 
+                  value={editingDeployment.location}
+                  onChange={(e) => setEditingDeployment({...editingDeployment, location: e.target.value})}
+                  className="w-full bg-black-950 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-gold-500" 
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="block text-xs text-gray-400 uppercase">Start Date</label>
+                  <input 
+                    required 
+                    type="date" 
+                    value={editingDeployment.startDate}
+                    onChange={(e) => setEditingDeployment({...editingDeployment, startDate: e.target.value})}
+                    className="w-full bg-black-950 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-gold-500" 
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="block text-xs text-gray-400 uppercase">End Date</label>
+                  <input 
+                    required 
+                    type="date" 
+                    value={editingDeployment.endDate}
+                    onChange={(e) => setEditingDeployment({...editingDeployment, endDate: e.target.value})}
+                    className="w-full bg-black-950 border border-white/10 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:ring-2 focus:ring-gold-500" 
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-xs text-gray-400 uppercase">Assign Officers</label>
+                {guards.length === 0 ? (
+                  <p className="text-xs text-gray-500">No guards available.</p>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto">
+                    {guards.map((guard) => {
+                      const isChecked = editingDeployment.guardsAssigned.includes(guard.id);
+                      return (
+                        <button
+                          key={guard.id}
+                          type="button"
+                          onClick={() => {
+                            const newGuards = isChecked
+                              ? editingDeployment.guardsAssigned.filter(id => id !== guard.id)
+                              : [...editingDeployment.guardsAssigned, guard.id];
+                            setEditingDeployment({...editingDeployment, guardsAssigned: newGuards});
+                          }}
+                          className={`flex items-center justify-between px-3 py-2 rounded-lg border text-sm text-left transition-all ${
+                            isChecked 
+                              ? "bg-gold-500/10 border-gold-500/50 text-white" 
+                              : "bg-black-950/40 border-white/5 text-gray-400 hover:border-white/10"
+                          }`}
+                        >
+                          <div>
+                            <p className="font-medium">{guard.name}</p>
+                            <p className="text-xs text-gray-500">{guard.role}</p>
+                          </div>
+                          {isChecked && <Check className="h-4 w-4 text-gold-500" />}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
+              <Button type="button" variant="secondary" onClick={() => setEditingDeployment(null)}>
+                Cancel
+              </Button>
+              <Button type="submit">
+                Save Changes
               </Button>
             </div>
           </form>
