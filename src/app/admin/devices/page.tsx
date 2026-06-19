@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, Search, Radio, Truck, Video, Activity, MoreVertical, Filter } from "lucide-react";
+import { Plus, Search, Radio, Truck, Video, Activity, MoreVertical, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
-// Mock Data for Devices
-const mockDevices = [
+const initialMockDevices = [
   { id: "DEV-1001", name: "Alpha Camera 1", type: "Camera", status: "Online", location: "Sector 4, Main Gate", lastPing: "2 mins ago" },
   { id: "DEV-1002", name: "Alpha Camera 2", type: "Camera", status: "Offline", location: "Sector 4, Back Gate", lastPing: "2 hrs ago" },
   { id: "DEV-1003", name: "Patrol Vehicle 1", type: "Vehicle", status: "Active", location: "Route B", lastPing: "1 min ago" },
@@ -15,12 +14,43 @@ const mockDevices = [
 ];
 
 export default function DevicesPage() {
+  const [devices, setDevices] = useState(initialMockDevices);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredDevices = mockDevices.filter(dev => 
-    dev.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    dev.id.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter States
+  const [showFilters, setShowFilters] = useState(false);
+  const [statusFilter, setStatusFilter] = useState("All");
+  const [typeFilter, setTypeFilter] = useState("All");
+
+  // Modal States
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newDevice, setNewDevice] = useState({
+    name: "",
+    type: "Camera",
+    location: ""
+  });
+
+  const filteredDevices = devices.filter(dev => {
+    const matchesSearch = dev.name.toLowerCase().includes(searchQuery.toLowerCase()) || dev.id.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === "All" || dev.status === statusFilter || (statusFilter === "Online" && dev.status === "Active");
+    const matchesType = typeFilter === "All" || dev.type === typeFilter;
+    return matchesSearch && matchesStatus && matchesType;
+  });
+
+  const handleAddDevice = (e: React.FormEvent) => {
+    e.preventDefault();
+    const device = {
+      id: `DEV-100${devices.length + 1}`,
+      name: newDevice.name,
+      type: newDevice.type,
+      status: "Online",
+      location: newDevice.location,
+      lastPing: "Just now"
+    };
+    setDevices([device, ...devices]);
+    setIsModalOpen(false);
+    setNewDevice({ name: "", type: "Camera", location: "" });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -56,16 +86,49 @@ export default function DevicesPage() {
           />
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
-          <Button variant="outline" className="flex-1 sm:flex-none">
+          <Button variant={showFilters ? "primary" : "outline"} className="flex-1 sm:flex-none" onClick={() => setShowFilters(!showFilters)}>
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
-          <Button className="flex-1 sm:flex-none">
+          <Button className="flex-1 sm:flex-none" onClick={() => setIsModalOpen(true)}>
             <Plus className="h-4 w-4 mr-2" />
             Add Asset
           </Button>
         </div>
       </div>
+
+      {/* Filter Panel */}
+      {showFilters && (
+        <div className="glass p-4 rounded-xl border border-white/5 flex flex-wrap gap-4 animate-in fade-in slide-in-from-top-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-gray-400">Status</label>
+            <select 
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="bg-black-900 border border-white/10 text-sm rounded-lg block w-full p-2.5 text-white focus:ring-gold-500 focus:border-gold-500 outline-none"
+            >
+              <option value="All">All Statuses</option>
+              <option value="Online">Online / Active</option>
+              <option value="Offline">Offline</option>
+              <option value="Maintenance">Maintenance</option>
+            </select>
+          </div>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-gray-400">Type</label>
+            <select 
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="bg-black-900 border border-white/10 text-sm rounded-lg block w-full p-2.5 text-white focus:ring-gold-500 focus:border-gold-500 outline-none"
+            >
+              <option value="All">All Types</option>
+              <option value="Camera">Camera</option>
+              <option value="Vehicle">Vehicle</option>
+              <option value="Sensor">Sensor</option>
+              <option value="Drone">Drone</option>
+            </select>
+          </div>
+        </div>
+      )}
 
       {/* Data Table */}
       <div className="bg-black-900 border border-white/5 rounded-xl overflow-hidden">
@@ -117,7 +180,7 @@ export default function DevicesPage() {
               {filteredDevices.length === 0 && (
                 <tr>
                   <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                    No devices found matching your search.
+                    No devices found matching your search criteria.
                   </td>
                 </tr>
               )}
@@ -125,6 +188,65 @@ export default function DevicesPage() {
           </table>
         </div>
       </div>
+
+      {/* Add Asset Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-950/80 backdrop-blur-sm p-4">
+          <div className="bg-black-900 border border-white/10 rounded-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95">
+            <div className="flex items-center justify-between p-6 border-b border-white/5">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <Plus className="h-5 w-5 text-gold-500" />
+                Add New Asset
+              </h2>
+              <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white transition-colors">
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleAddDevice} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Asset Name</label>
+                <Input 
+                  required
+                  placeholder="e.g. Beta Camera 3"
+                  value={newDevice.name}
+                  onChange={e => setNewDevice({...newDevice, name: e.target.value})}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Asset Type</label>
+                <select 
+                  value={newDevice.type}
+                  onChange={e => setNewDevice({...newDevice, type: e.target.value})}
+                  className="bg-black-950 border border-white/10 text-sm rounded-lg block w-full p-2.5 text-white focus:ring-gold-500 focus:border-gold-500 outline-none"
+                >
+                  <option value="Camera">Camera</option>
+                  <option value="Vehicle">Vehicle</option>
+                  <option value="Sensor">Sensor</option>
+                  <option value="Drone">Drone</option>
+                  <option value="Radio">Radio</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Location / Assignment</label>
+                <Input 
+                  required
+                  placeholder="e.g. South Perimeter"
+                  value={newDevice.location}
+                  onChange={e => setNewDevice({...newDevice, location: e.target.value})}
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-6 border-t border-white/5 mt-6">
+                <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
+                <Button type="submit">Add Asset</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
