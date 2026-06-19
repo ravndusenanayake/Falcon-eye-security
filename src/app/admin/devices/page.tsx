@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, Search, Radio, Truck, Video, Activity, MoreVertical, Filter, X } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Plus, Search, Radio, Truck, Video, Activity, MoreVertical, Filter, X, Edit2, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
@@ -23,6 +23,21 @@ export default function DevicesPage() {
   const [showFilters, setShowFilters] = useState(false);
   const [statusFilter, setStatusFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
+
+  // Actions Dropdown & Edit
+  const [actionMenuOpen, setActionMenuOpen] = useState<string | null>(null);
+  const [editingDevice, setEditingDevice] = useState<Device | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setActionMenuOpen(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Modal States
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -81,6 +96,49 @@ export default function DevicesPage() {
     } catch (error) {
       console.error(error);
       alert("Error adding asset");
+    }
+  };
+
+  const handleUpdateDevice = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingDevice) return;
+
+    try {
+      const response = await fetch(`/api/devices/${editingDevice.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(editingDevice)
+      });
+
+      if (response.ok) {
+        setEditingDevice(null);
+        fetchDevices();
+      } else {
+        alert("Failed to update asset");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error updating asset");
+    }
+  };
+
+  const handleDeleteDevice = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this asset?")) return;
+
+    try {
+      const response = await fetch(`/api/devices/${id}`, {
+        method: "DELETE"
+      });
+
+      if (response.ok) {
+        setActionMenuOpen(null);
+        fetchDevices();
+      } else {
+        alert("Failed to delete asset");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error deleting asset");
     }
   };
 
@@ -214,13 +272,38 @@ export default function DevicesPage() {
                   </td>
                   <td className="px-6 py-4 text-gray-400">{device.location}</td>
                   <td className="px-6 py-4 text-gray-400">{device.lastPing}</td>
-                  <td className="px-6 py-4 text-right">
+                  <td className="px-6 py-4 text-right relative">
                     <button 
-                      onClick={() => alert(`Actions menu for ${device.name} coming soon!`)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setActionMenuOpen(actionMenuOpen === device.id ? null : device.id);
+                      }}
                       className="text-gray-500 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
                     >
                       <MoreVertical className="h-4 w-4" />
                     </button>
+                    
+                    {actionMenuOpen === device.id && (
+                      <div ref={menuRef} className="absolute right-8 top-10 w-40 bg-black-800 border border-white/10 rounded-lg shadow-xl z-10 overflow-hidden animate-in fade-in zoom-in-95">
+                        <button
+                          onClick={() => {
+                            setEditingDevice(device);
+                            setActionMenuOpen(null);
+                          }}
+                          className="w-full text-left px-4 py-2.5 text-sm text-gray-300 hover:bg-white/5 hover:text-white flex items-center gap-2"
+                        >
+                          <Edit2 className="h-4 w-4 text-gray-400" />
+                          Edit Asset
+                        </button>
+                        <button
+                          onClick={() => handleDeleteDevice(device.id)}
+                          className="w-full text-left px-4 py-2.5 text-sm text-red-400 hover:bg-red-500/10 flex items-center gap-2 border-t border-white/5"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                          Delete Asset
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               )))}
@@ -282,6 +365,76 @@ export default function DevicesPage() {
               <div className="flex justify-end gap-3 pt-6 border-t border-white/5 mt-6">
                 <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
                 <Button type="submit">Add Asset</Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Asset Modal */}
+      {editingDevice && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black-950/80 backdrop-blur-sm p-4">
+          <div className="bg-black-900 border border-white/10 rounded-2xl w-full max-w-md overflow-hidden animate-in zoom-in-95">
+            <div className="flex items-center justify-between p-6 border-b border-white/5">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <Edit2 className="h-5 w-5 text-gold-500" />
+                Edit Asset
+              </h2>
+              <button onClick={() => setEditingDevice(null)} className="text-gray-400 hover:text-white transition-colors">
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            
+            <form onSubmit={handleUpdateDevice} className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Asset Name</label>
+                <Input 
+                  required
+                  value={editingDevice.name}
+                  onChange={e => setEditingDevice({...editingDevice, name: e.target.value})}
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Asset Type</label>
+                <select 
+                  value={editingDevice.type}
+                  onChange={e => setEditingDevice({...editingDevice, type: e.target.value})}
+                  className="bg-black-950 border border-white/10 text-sm rounded-lg block w-full p-2.5 text-white focus:ring-gold-500 focus:border-gold-500 outline-none"
+                >
+                  <option value="Camera">Camera</option>
+                  <option value="Vehicle">Vehicle</option>
+                  <option value="Sensor">Sensor</option>
+                  <option value="Drone">Drone</option>
+                  <option value="Radio">Radio</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Status</label>
+                <select 
+                  value={editingDevice.status}
+                  onChange={e => setEditingDevice({...editingDevice, status: e.target.value})}
+                  className="bg-black-950 border border-white/10 text-sm rounded-lg block w-full p-2.5 text-white focus:ring-gold-500 focus:border-gold-500 outline-none"
+                >
+                  <option value="Online">Online / Active</option>
+                  <option value="Offline">Offline</option>
+                  <option value="Maintenance">Maintenance</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-300 mb-1.5">Location / Assignment</label>
+                <Input 
+                  required
+                  value={editingDevice.location}
+                  onChange={e => setEditingDevice({...editingDevice, location: e.target.value})}
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-6 border-t border-white/5 mt-6">
+                <Button type="button" variant="ghost" onClick={() => setEditingDevice(null)}>Cancel</Button>
+                <Button type="submit">Save Changes</Button>
               </div>
             </form>
           </div>
