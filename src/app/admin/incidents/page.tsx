@@ -1,19 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Search, AlertTriangle, ShieldAlert, Clock, CheckCircle2, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
-const initialMockIncidents = [
-  { id: "INC-2023-001", title: "Unauthorized Access Attempt", severity: "Critical", status: "Open", location: "Sector 7G", reportedBy: "Sensor A", time: "10 mins ago" },
-  { id: "INC-2023-002", title: "Perimeter Breach (Suspected animal)", severity: "Low", status: "Resolved", location: "North Fence", reportedBy: "Drone X", time: "2 hrs ago" },
-  { id: "INC-2023-003", title: "Camera Offline Alert", severity: "Medium", status: "In Progress", location: "Main Gate", reportedBy: "System", time: "1 day ago" },
-  { id: "INC-2023-004", title: "Suspicious Vehicle Loitering", severity: "High", status: "Open", location: "Parking Lot B", reportedBy: "Guard Post 2", time: "45 mins ago" },
-];
+interface Incident {
+  id: string;
+  title: string;
+  severity: string;
+  status: string;
+  location: string;
+  reportedBy: string;
+  time: string;
+}
 
 export default function IncidentsPage() {
-  const [incidents, setIncidents] = useState(initialMockIncidents);
+  const [incidents, setIncidents] = useState<Incident[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   
   // Filter States
@@ -30,6 +34,23 @@ export default function IncidentsPage() {
     reportedBy: "Manual Entry"
   });
 
+  useEffect(() => {
+    fetchIncidents();
+  }, []);
+
+  const fetchIncidents = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/incidents");
+      const data = await res.json();
+      if (data.success) setIncidents(data.incidents);
+    } catch (error) {
+      console.error("Failed to fetch incidents", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredIncidents = incidents.filter(inc => {
     const matchesSearch = inc.title.toLowerCase().includes(searchQuery.toLowerCase()) || inc.id.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "All" || inc.status === statusFilter;
@@ -37,20 +58,32 @@ export default function IncidentsPage() {
     return matchesSearch && matchesStatus && matchesSeverity;
   });
 
-  const handleReportIncident = (e: React.FormEvent) => {
+  const handleReportIncident = async (e: React.FormEvent) => {
     e.preventDefault();
-    const incident = {
-      id: `INC-2023-00${incidents.length + 1}`,
-      title: newIncident.title,
-      severity: newIncident.severity,
-      status: "Open",
-      location: newIncident.location,
-      reportedBy: newIncident.reportedBy,
-      time: "Just now"
-    };
-    setIncidents([incident, ...incidents]);
-    setIsModalOpen(false);
-    setNewIncident({ title: "", severity: "Medium", location: "", reportedBy: "Manual Entry" });
+    try {
+      const response = await fetch("/api/incidents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: newIncident.title,
+          severity: newIncident.severity,
+          status: "Open",
+          location: newIncident.location,
+          reportedBy: newIncident.reportedBy
+        })
+      });
+
+      if (response.ok) {
+        setIsModalOpen(false);
+        setNewIncident({ title: "", severity: "Medium", location: "", reportedBy: "Manual Entry" });
+        fetchIncidents();
+      } else {
+        alert("Failed to report incident");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error reporting incident");
+    }
   };
 
   const getSeverityColor = (severity: string) => {
@@ -133,10 +166,24 @@ export default function IncidentsPage() {
 
       {/* Kanban / Cards Layout */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredIncidents.map((incident) => (
-          <div key={incident.id} className="glass p-6 rounded-xl border border-white/5 hover:border-gold-500/30 transition-colors flex flex-col h-full">
-            <div className="flex justify-between items-start mb-4">
-              <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${getSeverityColor(incident.severity)}`}>
+        {loading ? (
+          <div className="col-span-full p-12 text-center text-gray-500 glass rounded-xl border-dashed border-white/10">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <div className="h-6 w-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
+              <span>Loading incidents...</span>
+            </div>
+          </div>
+        ) : filteredIncidents.length === 0 ? (
+          <div className="col-span-full p-12 text-center glass rounded-xl border-dashed border-white/10">
+            <ShieldAlert className="h-12 w-12 text-gray-600 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-white mb-2">No Incidents Found</h3>
+            <p className="text-gray-400">There are no incidents matching your criteria.</p>
+          </div>
+        ) : (
+          filteredIncidents.map((incident) => (
+            <div key={incident.id} className="glass p-6 rounded-xl border border-white/5 hover:border-gold-500/30 transition-colors flex flex-col h-full">
+              <div className="flex justify-between items-start mb-4">
+                <span className={`px-2.5 py-1 rounded-md text-xs font-semibold ${getSeverityColor(incident.severity)}`}>
                 {incident.severity}
               </span>
               <div className="flex items-center gap-1.5 text-sm font-medium bg-black-900 px-2.5 py-1 rounded-md border border-white/5">
@@ -164,14 +211,7 @@ export default function IncidentsPage() {
               <Button variant="ghost" size="sm" className="h-8 px-3 text-xs">View Details</Button>
             </div>
           </div>
-        ))}
-
-        {filteredIncidents.length === 0 && (
-          <div className="col-span-full p-12 text-center glass rounded-xl border-dashed border-white/10">
-            <ShieldAlert className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-white mb-2">No Incidents Found</h3>
-            <p className="text-gray-400">There are no incidents matching your criteria.</p>
-          </div>
+          ))
         )}
       </div>
 

@@ -1,20 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Search, Radio, Truck, Video, Activity, MoreVertical, Filter, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 
-const initialMockDevices = [
-  { id: "DEV-1001", name: "Alpha Camera 1", type: "Camera", status: "Online", location: "Sector 4, Main Gate", lastPing: "2 mins ago" },
-  { id: "DEV-1002", name: "Alpha Camera 2", type: "Camera", status: "Offline", location: "Sector 4, Back Gate", lastPing: "2 hrs ago" },
-  { id: "DEV-1003", name: "Patrol Vehicle 1", type: "Vehicle", status: "Active", location: "Route B", lastPing: "1 min ago" },
-  { id: "DEV-1004", name: "Motion Sensor A", type: "Sensor", status: "Maintenance", location: "Server Room", lastPing: "1 day ago" },
-  { id: "DEV-1005", name: "Patrol Drone X", type: "Drone", status: "Online", location: "Perimeter", lastPing: "Just now" },
-];
+interface Device {
+  id: string;
+  name: string;
+  type: string;
+  status: string;
+  location: string;
+  lastPing: string;
+}
 
 export default function DevicesPage() {
-  const [devices, setDevices] = useState(initialMockDevices);
+  const [devices, setDevices] = useState<Device[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
 
   // Filter States
@@ -30,6 +32,23 @@ export default function DevicesPage() {
     location: ""
   });
 
+  useEffect(() => {
+    fetchDevices();
+  }, []);
+
+  const fetchDevices = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch("/api/devices");
+      const data = await res.json();
+      if (data.success) setDevices(data.devices);
+    } catch (error) {
+      console.error("Failed to fetch devices", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const filteredDevices = devices.filter(dev => {
     const matchesSearch = dev.name.toLowerCase().includes(searchQuery.toLowerCase()) || dev.id.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === "All" || dev.status === statusFilter || (statusFilter === "Online" && dev.status === "Active");
@@ -37,19 +56,32 @@ export default function DevicesPage() {
     return matchesSearch && matchesStatus && matchesType;
   });
 
-  const handleAddDevice = (e: React.FormEvent) => {
+  const handleAddDevice = async (e: React.FormEvent) => {
     e.preventDefault();
-    const device = {
-      id: `DEV-100${devices.length + 1}`,
-      name: newDevice.name,
-      type: newDevice.type,
-      status: "Online",
-      location: newDevice.location,
-      lastPing: "Just now"
-    };
-    setDevices([device, ...devices]);
-    setIsModalOpen(false);
-    setNewDevice({ name: "", type: "Camera", location: "" });
+    try {
+      const response = await fetch("/api/devices", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newDevice.name,
+          type: newDevice.type,
+          status: "Online",
+          location: newDevice.location,
+          lastPing: "Just now"
+        })
+      });
+
+      if (response.ok) {
+        setIsModalOpen(false);
+        setNewDevice({ name: "", type: "Camera", location: "" });
+        fetchDevices();
+      } else {
+        alert("Failed to add asset");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error adding asset");
+    }
   };
 
   const getStatusColor = (status: string) => {
@@ -145,10 +177,26 @@ export default function DevicesPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
-              {filteredDevices.map((device) => (
-                <tr key={device.id} className="hover:bg-white/5 transition-colors">
-                  <td className="px-6 py-4 font-medium text-white">{device.id}</td>
-                  <td className="px-6 py-4">
+              {loading ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                    <div className="flex flex-col items-center justify-center gap-2">
+                      <div className="h-6 w-6 border-2 border-gold-500 border-t-transparent rounded-full animate-spin"></div>
+                      <span>Loading assets...</span>
+                    </div>
+                  </td>
+                </tr>
+              ) : filteredDevices.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                    No devices found matching your search criteria.
+                  </td>
+                </tr>
+              ) : (
+                filteredDevices.map((device) => (
+                  <tr key={device.id} className="hover:bg-white/5 transition-colors">
+                    <td className="px-6 py-4 font-medium text-white font-mono text-xs">{device.id}</td>
+                    <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="p-2 bg-black-800 rounded-lg">
                         {getTypeIcon(device.type)}
@@ -175,15 +223,7 @@ export default function DevicesPage() {
                     </button>
                   </td>
                 </tr>
-              ))}
-              
-              {filteredDevices.length === 0 && (
-                <tr>
-                  <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
-                    No devices found matching your search criteria.
-                  </td>
-                </tr>
-              )}
+              )))}
             </tbody>
           </table>
         </div>

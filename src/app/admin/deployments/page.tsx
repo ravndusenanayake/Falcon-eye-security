@@ -65,14 +65,20 @@ export default function DeploymentsPage() {
     }
   };
 
-  const handleGuardToggle = (name: string) => {
+  const handleGuardToggle = (id: string) => {
     setSelectedGuards(prev => 
-      prev.includes(name) ? prev.filter(n => n !== name) : [...prev, name]
+      prev.includes(id) ? prev.filter(n => n !== id) : [...prev, id]
     );
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (new Date(startDate) > new Date(endDate)) {
+      alert("Start Date cannot be later than End Date");
+      return;
+    }
+
     try {
       const response = await fetch("/api/deployments", {
         method: "POST",
@@ -196,11 +202,15 @@ export default function DeploymentsPage() {
                     {dep.guardsAssigned.length === 0 ? (
                       <span className="text-xs text-red-400">No guards assigned</span>
                     ) : (
-                      dep.guardsAssigned.map((guard) => (
-                        <span key={guard} className="inline-flex items-center rounded bg-white/5 text-gray-300 px-2 py-0.5 text-xs border border-white/10">
-                          {guard}
-                        </span>
-                      ))
+                      dep.guardsAssigned.map((guardId) => {
+                        const guardDetails = guards.find(g => g.id === guardId);
+                        const displayName = guardDetails ? guardDetails.name : guardId;
+                        return (
+                          <span key={guardId} className="inline-flex items-center rounded bg-white/5 text-gray-300 px-2 py-0.5 text-xs border border-white/10">
+                            {displayName}
+                          </span>
+                        );
+                      })
                     )}
                   </div>
                 </div>
@@ -297,12 +307,12 @@ export default function DeploymentsPage() {
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-40 overflow-y-auto">
                     {guards.map((guard) => {
-                      const isChecked = selectedGuards.includes(guard.name);
+                      const isChecked = selectedGuards.includes(guard.id);
                       return (
                         <button
                           key={guard.id}
                           type="button"
-                          onClick={() => handleGuardToggle(guard.name)}
+                          onClick={() => handleGuardToggle(guard.id)}
                           className={`flex items-center justify-between px-3 py-2 rounded-lg border text-sm text-left transition-all ${
                             isChecked 
                               ? "bg-gold-500/10 border-gold-500/50 text-white" 
