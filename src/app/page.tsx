@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Shield, Users, Briefcase, ChevronRight, Phone, Camera } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { ImageSlider } from "@/components/ui/ImageSlider";
+import { VideoMarquee } from "@/components/ui/VideoMarquee";
 
 export default function Home() {
   return (
@@ -163,8 +164,10 @@ export default function Home() {
         </div>
       </section>
 
+      <VideoMarquee />
+
       {/* Trust & Credibility Section */}
-      <section className="py-24 bg-black-900 border-y border-white/5">
+      <section className="py-24 bg-black-950 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <motion.div 
@@ -199,15 +202,31 @@ export default function Home() {
               initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="relative aspect-square lg:aspect-auto lg:h-[600px] rounded-2xl overflow-hidden glass"
+              className="relative aspect-square lg:aspect-auto lg:h-[600px] rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] group"
             >
-              {/* Placeholder for guards image */}
-              <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582136014387-a2928509e51c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center opacity-70" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black-950 via-transparent to-transparent" />
-              <div className="absolute bottom-0 left-0 p-8">
-                <div className="glass-gold px-4 py-2 rounded-lg inline-block mb-4">
-                  <span className="font-bold text-gold-400">100+</span>
-                  <span className="text-white ml-2">Successful Deployments</span>
+              <div 
+                className="absolute inset-0 bg-cover bg-top transition-transform duration-1000 group-hover:scale-110 opacity-70"
+                style={{ backgroundImage: "url('https://res.cloudinary.com/de81b81yk/image/upload/v1782193185/467184105_558407270461234_2113352272362722298_n_hohr3c.jpg')" }} 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black-950/90 via-black-950/20 to-transparent pointer-events-none" />
+              
+              {/* Expandable Details Card on Hover */}
+              <div className="absolute bottom-0 left-0 p-6 md:p-8 w-full pointer-events-none">
+                <div className="bg-black-900/80 backdrop-blur-xl border border-white/10 p-6 md:p-8 rounded-2xl shadow-2xl pointer-events-auto transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 relative overflow-hidden">
+                  <div className="absolute left-0 top-0 bottom-0 w-1.5 bg-gold-500 transition-transform duration-500 origin-bottom scale-y-50 group-hover:scale-y-100" />
+                  <div className="flex flex-col ml-4">
+                    <span className="text-4xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600 tracking-tight">100+</span>
+                    <span className="text-sm md:text-base text-gray-200 uppercase tracking-widest font-bold mt-2">Successful Deployments</span>
+                    
+                    {/* CSS Grid hack for smooth auto-height animation */}
+                    <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-in-out">
+                      <div className="overflow-hidden">
+                        <p className="text-gray-400 mt-4 leading-relaxed font-light text-sm md:text-base border-t border-white/10 pt-4">
+                          Our elite forces have flawlessly executed over a hundred high-profile security operations, ensuring absolute safety, zero compromises, and total confidentiality for diplomats, executives, and VIPs across Sri Lanka.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </motion.div>

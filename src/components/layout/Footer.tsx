@@ -32,7 +32,9 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-6">
-              <Shield className="h-8 w-8 text-gold-500" />
+              <div className="relative h-12 w-12 overflow-hidden rounded-full shadow-[0_0_15px_rgba(245,158,11,0.3)] group-hover:scale-105 transition-transform">
+                <img src="/logo.jpg" alt="Falcon Eye Security Logo" className="object-cover w-full h-full" />
+              </div>
               <span className="text-2xl font-bold tracking-tight text-white uppercase">
                 Falcon Eye <span className="text-gold-500">Security</span>
               </span>
