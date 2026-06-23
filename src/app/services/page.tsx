@@ -14,12 +14,12 @@ const categories = [
       {
         name: "Close Protection (Bodyguards)",
         details: "Highly trained personnel providing physical security for individuals against threats. We ensure absolute safety while maintaining a discreet presence.",
-        image: "https://images.unsplash.com/photo-1555848962-6e79363ec58f?q=80&w=2033&auto=format&fit=crop"
+        image: "https://res.cloudinary.com/de81b81yk/image/upload/v1782208149/484051788_648900844745209_5764833789580979374_n_juramx.jpg"
       },
       {
         name: "VIP Escort Services",
         details: "Secure transportation and route planning to ensure safe transit between locations. Our convoy teams are trained for rapid response and evasive driving.",
-        image: "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?q=80&w=2069&auto=format&fit=crop"
+        image: "https://res.cloudinary.com/de81b81yk/image/upload/v1782208150/619250840_899560909679200_8091618227358801222_n_hyy9fg.jpg"
       }
     ]
   },
@@ -31,12 +31,12 @@ const categories = [
       {
         name: "Event Security",
         details: "Crowd control, access management, and emergency response planning for large gatherings. We ensure seamless operations for premium events.",
-        image: "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2069&auto=format&fit=crop"
+        image: "https://res.cloudinary.com/de81b81yk/image/upload/v1782208720/646094835_936925965942694_1612430073681070472_n_dqbena.jpg"
       },
       {
         name: "Venue Protection",
         details: "24/7 securing of corporate facilities, private estates, and temporary event spaces. Advanced surveillance integrated with elite guard deployment.",
-        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=2070&auto=format&fit=crop"
+        image: "https://res.cloudinary.com/de81b81yk/image/upload/v1782208149/646786558_936925915942699_7206008907785125021_n_jf4w45.jpg"
       }
     ]
   }
