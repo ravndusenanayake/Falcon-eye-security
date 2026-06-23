@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Shield, Star, Award, CheckCircle } from "lucide-react";
 interface SquadMember {
@@ -75,9 +76,9 @@ export default function PortfolioPage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 bg-black-900 border-b border-white/5">
+      <section className="py-20 bg-black-900 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 divide-y md:divide-y-0 md:divide-x divide-white/10">
             {stats.map((stat, index) => (
               <motion.div
                 key={stat.label}
@@ -85,11 +86,10 @@ export default function PortfolioPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="flex flex-col items-center justify-center p-6 glass rounded-2xl"
+                className="flex flex-col items-center justify-center py-6 md:py-0"
               >
-                <stat.icon className="h-10 w-10 text-gold-500 mb-4" />
-                <span className="text-4xl font-bold text-white mb-2">{stat.value}</span>
-                <span className="text-gray-400 font-medium uppercase tracking-wider text-sm">{stat.label}</span>
+                <span className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600 mb-4 drop-shadow-sm">{stat.value}</span>
+                <span className="text-gray-300 font-bold uppercase tracking-[0.2em] text-sm md:text-base">{stat.label}</span>
               </motion.div>
             ))}
           </div>
@@ -164,6 +164,31 @@ export default function PortfolioPage() {
                 </motion.div>
               ))
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 relative overflow-hidden bg-black-950 border-t border-white/5">
+        <div className="absolute inset-0 bg-gradient-to-t from-black-900 to-transparent opacity-50" />
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/20 mb-6"
+          >
+            <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
+            <span className="text-xs font-bold text-gold-400 uppercase tracking-widest">Available 24/7</span>
+          </motion.div>
+          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Need Elite Protection?</h2>
+          <p className="text-xl text-gray-400 mb-10 font-light">Deploy our highly trained Falcon Eye Squad for your personal or corporate security needs.</p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Link href="/contact">
+              <button className="w-full sm:w-auto text-lg px-8 py-4 bg-gold-500 hover:bg-gold-400 text-black-950 font-bold rounded-lg transition-colors shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)]">
+                Hire Our Squad
+              </button>
+            </Link>
           </div>
         </div>
       </section>
