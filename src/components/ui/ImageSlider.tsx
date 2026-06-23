@@ -23,7 +23,7 @@ export function ImageSlider() {
   }, []);
 
   return (
-    <div className="relative w-full max-w-5xl mx-auto h-[400px] sm:h-[500px] lg:h-[600px] overflow-hidden rounded-2xl glass border border-white/10 shadow-[0_0_30px_rgba(245,158,11,0.15)]">
+    <div className="relative w-full mx-auto h-[400px] sm:h-[500px] lg:h-[700px] xl:h-[800px] overflow-hidden rounded-3xl glass border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
       <AnimatePresence mode="wait">
         <motion.img
           key={currentIndex}

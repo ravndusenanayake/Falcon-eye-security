@@ -57,7 +57,7 @@ function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="glass p-8 md:p-10 rounded-2xl border border-white/5 space-y-6">
+    <form onSubmit={handleSubmit} className="glass p-6 md:p-10 rounded-2xl border border-white/5 space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
           <label htmlFor="firstName" className="block text-sm font-medium text-gray-300">First Name</label>
@@ -123,7 +123,7 @@ export default function ContactPage() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-5xl font-bold text-white mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6"
           >
             Request a <span className="text-gold-500">Consultation</span>
           </motion.h1>
@@ -131,7 +131,7 @@ export default function ContactPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl text-gray-400 max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto px-4"
           >
             Contact us for a confidential threat assessment. Our specialists are available 24/7 for urgent operational requirements.
           </motion.p>
@@ -144,7 +144,7 @@ export default function ContactPage() {
             transition={{ delay: 0.2 }}
             className="lg:col-span-1 space-y-8"
           >
-            <div className="glass p-8 rounded-2xl border border-white/5">
+            <div className="glass p-6 md:p-8 rounded-2xl border border-white/5">
               <h3 className="text-xl font-bold text-white mb-6">Direct Contact</h3>
               
               <div className="space-y-6">

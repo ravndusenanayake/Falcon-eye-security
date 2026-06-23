@@ -46,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={`${inter.variable} scroll-smooth antialiased`}>
+    <html lang="en" suppressHydrationWarning className={`${inter.variable} scroll-smooth antialiased dark`}>
       <head>
         <MetaPixel />
       </head>

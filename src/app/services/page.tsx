@@ -49,7 +49,7 @@ export default function ServicesPage() {
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-bold text-white mb-6"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6"
           >
             Elite Security <span className="text-gold-500">Services</span>
           </motion.h1>
@@ -57,7 +57,7 @@ export default function ServicesPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-xl text-gray-400 max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto px-4"
           >
             Explore our specialized security packages designed for maximum protection and minimal intrusion.
           </motion.p>
@@ -67,7 +67,7 @@ export default function ServicesPage() {
       {/* Services List */}
       <section className="py-24 relative">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             {categories.map((category, index) => (
               <motion.div
                 key={category.title}
@@ -75,14 +75,14 @@ export default function ServicesPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2 }}
-                className="glass p-8 md:p-12 rounded-3xl border border-white/5 shadow-2xl"
+                className="glass p-6 sm:p-8 md:p-12 rounded-3xl border border-white/5 shadow-2xl"
               >
                 <div className="mb-10 pb-8 border-b border-white/10">
                   <div className="text-gold-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
                     Category 0{index + 1}
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">{category.title}</h2>
-                  <p className="text-xl text-gray-400 font-light leading-relaxed">{category.description}</p>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight">{category.title}</h2>
+                  <p className="text-lg sm:text-xl text-gray-400 font-light leading-relaxed">{category.description}</p>
                 </div>
 
                 <div className="space-y-6">
@@ -90,7 +90,7 @@ export default function ServicesPage() {
                     <div 
                       key={sIndex} 
                       id={service.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}
-                      className="group p-8 rounded-2xl bg-black-900/40 border border-white/5 hover:border-gold-500/30 hover:bg-black-900/80 transition-all duration-300 scroll-mt-32 relative overflow-hidden"
+                      className="group p-6 md:p-8 rounded-2xl bg-black-900/40 border border-white/5 hover:border-gold-500/30 hover:bg-black-900/80 transition-all duration-300 scroll-mt-32 relative overflow-hidden"
                     >
                       <div className="absolute top-0 left-0 w-1.5 h-0 bg-gold-500 transition-all duration-500 group-hover:h-full" />
                       <h3 className="text-2xl font-bold text-white mb-3 ml-2 group-hover:translate-x-2 transition-transform duration-300">

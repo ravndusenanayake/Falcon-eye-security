@@ -68,7 +68,7 @@ export default function PortfolioPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-gray-400 max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto px-4"
           >
             Meet the highly trained professionals who form the backbone of our elite security operations.
           </motion.p>
@@ -88,7 +88,7 @@ export default function PortfolioPage() {
                 transition={{ delay: index * 0.1 }}
                 className="flex flex-col items-center justify-center py-6 md:py-0"
               >
-                <span className="text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600 mb-4 drop-shadow-sm">{stat.value}</span>
+                <span className="text-5xl sm:text-6xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600 mb-4 drop-shadow-sm">{stat.value}</span>
                 <span className="text-gray-300 font-bold uppercase tracking-[0.2em] text-sm md:text-base">{stat.label}</span>
               </motion.div>
             ))}
@@ -143,9 +143,9 @@ export default function PortfolioPage() {
                     </div>
 
                     {/* Back side - Details on solid color */}
-                    <div className="absolute inset-0 h-full w-full rounded-2xl bg-black-900 border border-gold-500/30 [transform:rotateY(180deg)] [backface-visibility:hidden] p-8 flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(234,179,8,0.1)]">
-                      <h3 className="text-3xl font-bold text-white mb-2">{guard.name}</h3>
-                      <p className="text-gold-500 text-lg font-medium mb-8 tracking-wide uppercase text-center">{guard.role}</p>
+                    <div className="absolute inset-0 h-full w-full rounded-2xl bg-black-900 border border-gold-500/30 [transform:rotateY(180deg)] [backface-visibility:hidden] p-6 md:p-8 flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(234,179,8,0.1)]">
+                      <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2">{guard.name}</h3>
+                      <p className="text-gold-500 text-base sm:text-lg font-medium mb-6 tracking-wide uppercase text-center">{guard.role}</p>
 
                       <div className="w-full text-left bg-black-950/50 p-5 rounded-xl border border-white/5 shadow-inner">
                         <p className="text-xs text-gray-400 mb-4 uppercase tracking-widest font-bold text-center">Qualifications</p>
@@ -181,8 +181,8 @@ export default function PortfolioPage() {
             <span className="w-2 h-2 rounded-full bg-gold-500 animate-pulse" />
             <span className="text-xs font-bold text-gold-400 uppercase tracking-widest">Available 24/7</span>
           </motion.div>
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 tracking-tight">Need Elite Protection?</h2>
-          <p className="text-xl text-gray-400 mb-10 font-light">Deploy our highly trained Falcon Eye Squad for your personal or corporate security needs.</p>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">Need Elite Protection?</h2>
+          <p className="text-lg sm:text-xl text-gray-400 mb-10 font-light">Deploy our highly trained Falcon Eye Squad for your personal or corporate security needs.</p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/contact">
               <button className="w-full sm:w-auto text-lg px-8 py-4 bg-gold-500 hover:bg-gold-400 text-black-950 font-bold rounded-lg transition-colors shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_30px_rgba(234,179,8,0.5)]">
