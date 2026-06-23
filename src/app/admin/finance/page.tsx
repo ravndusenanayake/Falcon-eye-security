@@ -164,15 +164,15 @@ export default function FinancePage() {
         </div>
       </div>
 
-      <div className="flex justify-between items-center pt-2">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-2">
         <p className="text-sm text-gray-400">Review corporate statements, issue invoices, and track outstanding VIP accounts.</p>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={handleSeedInvoices}>
-            Seed Demo Invoices
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button variant="secondary" onClick={handleSeedInvoices} className="flex-1 sm:flex-none whitespace-nowrap">
+            Seed Demo
           </Button>
-          <Button onClick={() => setIsModalOpen(true)}>
+          <Button onClick={() => setIsModalOpen(true)} className="flex-1 sm:flex-none whitespace-nowrap">
             <Plus className="h-4 w-4 mr-2" />
-            Create Invoice
+            Create
           </Button>
         </div>
       </div>
@@ -335,11 +335,11 @@ export default function FinancePage() {
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
-              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
+            <div className="flex flex-col sm:flex-row justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
+              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
                 Cancel
               </Button>
-              <Button type="submit">
+              <Button type="submit" className="w-full sm:w-auto">
                 Create Invoice
               </Button>
             </div>
@@ -453,7 +453,7 @@ export default function FinancePage() {
 
             {/* Footer / Non-printable cancel */}
             <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30 print:hidden">
-              <Button variant="secondary" onClick={() => setSelectedInvoice(null)}>
+              <Button variant="secondary" onClick={() => setSelectedInvoice(null)} className="w-full sm:w-auto">
                 Close
               </Button>
             </div>

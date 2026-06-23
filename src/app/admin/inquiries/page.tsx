@@ -268,29 +268,29 @@ export default function InquiriesPage() {
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
-              <div className="flex-1">
+            <div className="flex flex-col sm:flex-row justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
+              <div className="flex-1 flex flex-col sm:flex-row gap-2">
                 {selectedInquiry.status === 'New' && (
-                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Read')}>
+                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Read')} className="w-full sm:w-auto">
                     Mark as Read
                   </Button>
                 )}
                 {selectedInquiry.status === 'Read' && (
-                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Quoted')}>
+                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Quoted')} className="w-full sm:w-auto">
                     Mark as Quoted
                   </Button>
                 )}
                 {selectedInquiry.status === 'Quoted' && (
-                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Confirmed')}>
+                  <Button variant="secondary" onClick={() => updateStatus(selectedInquiry.id, 'Confirmed')} className="w-full sm:w-auto">
                     Mark as Confirmed
                   </Button>
                 )}
               </div>
-              <Button variant="secondary" onClick={() => setSelectedInquiry(null)}>
+              <Button variant="secondary" onClick={() => setSelectedInquiry(null)} className="w-full sm:w-auto">
                 Close
               </Button>
-              <a href={`https://wa.me/${selectedInquiry.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer">
-                <Button>
+              <a href={`https://wa.me/${selectedInquiry.phone.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto">
+                <Button className="w-full">
                   Contact via WhatsApp
                 </Button>
               </a>

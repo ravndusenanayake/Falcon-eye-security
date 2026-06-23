@@ -275,9 +275,9 @@ export default function IncidentsPage() {
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-6 border-t border-white/5 mt-6">
-                <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                <Button type="submit" className="bg-red-600 hover:bg-red-500 text-white">Submit Report</Button>
+              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-white/5 mt-6">
+                <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">Cancel</Button>
+                <Button type="submit" className="bg-red-600 hover:bg-red-500 text-white w-full sm:w-auto">Submit Report</Button>
               </div>
             </form>
           </div>

@@ -421,11 +421,11 @@ export default function DeploymentsPage() {
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
-              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)}>
+            <div className="flex flex-col sm:flex-row justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
+              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">
                 Cancel
               </Button>
-              <Button type="submit" disabled={guards.length === 0}>
+              <Button type="submit" disabled={guards.length === 0} className="w-full sm:w-auto">
                 Schedule Deployment
               </Button>
             </div>
@@ -565,11 +565,11 @@ export default function DeploymentsPage() {
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
-              <Button type="button" variant="secondary" onClick={() => setEditingDeployment(null)}>
+            <div className="flex flex-col sm:flex-row justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
+              <Button type="button" variant="secondary" onClick={() => setEditingDeployment(null)} className="w-full sm:w-auto">
                 Cancel
               </Button>
-              <Button type="submit">
+              <Button type="submit" className="w-full sm:w-auto">
                 Save Changes
               </Button>
             </div>

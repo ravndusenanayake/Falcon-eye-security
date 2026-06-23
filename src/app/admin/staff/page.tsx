@@ -476,11 +476,11 @@ export default function StaffPage() {
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
-              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)} disabled={uploadingImage}>
+            <div className="flex flex-col sm:flex-row justify-end gap-2 px-6 py-4 border-t border-white/5 bg-black-900/30">
+              <Button type="button" variant="secondary" onClick={() => setIsModalOpen(false)} disabled={uploadingImage} className="w-full sm:w-auto">
                 Cancel
               </Button>
-              <Button type="submit" disabled={uploadingImage}>
+              <Button type="submit" disabled={uploadingImage} className="w-full sm:w-auto">
                 {uploadingImage ? "Uploading Image..." : (editingId ? "Update Guard" : "Add Guard")}
               </Button>
             </div>

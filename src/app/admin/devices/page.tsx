@@ -362,9 +362,9 @@ export default function DevicesPage() {
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-6 border-t border-white/5 mt-6">
-                <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                <Button type="submit">Add Asset</Button>
+              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-white/5 mt-6">
+                <Button type="button" variant="ghost" onClick={() => setIsModalOpen(false)} className="w-full sm:w-auto">Cancel</Button>
+                <Button type="submit" className="w-full sm:w-auto">Add Asset</Button>
               </div>
             </form>
           </div>
@@ -432,9 +432,9 @@ export default function DevicesPage() {
                 />
               </div>
 
-              <div className="flex justify-end gap-3 pt-6 border-t border-white/5 mt-6">
-                <Button type="button" variant="ghost" onClick={() => setEditingDevice(null)}>Cancel</Button>
-                <Button type="submit">Save Changes</Button>
+              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-white/5 mt-6">
+                <Button type="button" variant="ghost" onClick={() => setEditingDevice(null)} className="w-full sm:w-auto">Cancel</Button>
+                <Button type="submit" className="w-full sm:w-auto">Save Changes</Button>
               </div>
             </form>
           </div>
