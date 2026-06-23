@@ -69,8 +69,8 @@ export function Footer() {
             &copy; {new Date().getFullYear()} Falcon Eye Security. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm text-gray-500">
-            <Link href="#" className="hover:text-gold-500 transition-colors">Privacy Policy</Link>
-            <Link href="#" className="hover:text-gold-500 transition-colors">Terms of Service</Link>
+            <Link href="/privacy" className="hover:text-gold-500 transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-gold-500 transition-colors">Terms of Service</Link>
           </div>
         </div>
       </div>

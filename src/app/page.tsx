@@ -217,15 +217,46 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gold-500/5" />
+      <section className="py-32 relative overflow-hidden flex items-center justify-center">
+        {/* Background Image */}
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582136014387-a2928509e51c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center bg-fixed" />
+        
+        {/* Dark Overlay for Readability */}
+        <div className="absolute inset-0 bg-black-950/80 bg-gradient-to-t from-black-950 via-black-950/60 to-black-950/80" />
+        
+        {/* Content */}
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10">
-          <Shield className="h-16 w-16 text-gold-500 mx-auto mb-6" />
-          <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to secure your peace of mind?</h2>
-          <p className="text-xl text-gray-400 mb-10">Contact us for a confidential consultation and threat assessment.</p>
-          <Link href="/contact">
-            <Button size="lg" className="text-lg px-10">Request Consultation</Button>
-          </Link>
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-lg tracking-tight"
+          >
+            Ready to secure your peace of mind?
+          </motion.h2>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto font-light drop-shadow-md"
+          >
+            Contact us for a confidential consultation and a comprehensive threat assessment tailored to your needs.
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <Link href="/contact">
+              <Button size="lg" className="text-lg px-12 h-14 shadow-[0_0_20px_rgba(234,179,8,0.3)] hover:shadow-[0_0_40px_rgba(234,179,8,0.6)] transition-all duration-300 transform hover:-translate-y-1">
+                Request Consultation
+              </Button>
+            </Link>
+          </motion.div>
         </div>
       </section>
     </div>
