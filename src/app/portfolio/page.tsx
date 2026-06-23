@@ -143,17 +143,12 @@ export default function PortfolioPage() {
                     </div>
 
                     {/* Back side - Details on solid color */}
-                    <div className="absolute inset-0 h-full w-full rounded-2xl bg-black-900 border border-gold-500/30 [transform:rotateY(180deg)] [backface-visibility:hidden] p-6 flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(234,179,8,0.1)]">
-                      <h3 className="text-2xl font-bold text-white mb-1">{guard.name}</h3>
-                      <p className="text-gold-500 text-sm font-medium mb-6">{guard.role}</p>
-                      
-                      <div className="w-full text-left mb-6 bg-black-950/50 p-4 rounded-xl border border-white/5">
-                        <p className="text-xs text-gray-400 mb-1 uppercase tracking-wider font-semibold">Experience</p>
-                        <p className="text-sm text-gray-200">{guard.experience}</p>
-                      </div>
+                    <div className="absolute inset-0 h-full w-full rounded-2xl bg-black-900 border border-gold-500/30 [transform:rotateY(180deg)] [backface-visibility:hidden] p-8 flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(234,179,8,0.1)]">
+                      <h3 className="text-3xl font-bold text-white mb-2">{guard.name}</h3>
+                      <p className="text-gold-500 text-lg font-medium mb-8 tracking-wide uppercase text-center">{guard.role}</p>
 
-                      <div className="w-full text-left">
-                        <p className="text-xs text-gray-400 mb-3 uppercase tracking-wider font-semibold">Key Certifications</p>
+                      <div className="w-full text-left bg-black-950/50 p-5 rounded-xl border border-white/5 shadow-inner">
+                        <p className="text-xs text-gray-400 mb-4 uppercase tracking-widest font-bold text-center">Qualifications</p>
                         <ul className="space-y-3">
                           {guard.certifications.slice(0, 4).map((qual, qIdx) => (
                             <li key={qIdx} className="flex items-start gap-3 text-sm text-gray-300">
