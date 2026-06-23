@@ -220,11 +220,11 @@ export default function Home() {
         <div className="absolute inset-0 bg-gold-500/5 opacity-50" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center justify-center p-3 bg-gold-500/10 rounded-full mb-6">
-              <Camera className="h-6 w-6 text-gold-500" />
+            <div className="text-gold-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
+              Gallery
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">Our Forces in Action</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">Glimpses of our elite security personnel on deployment across various high-profile operations.</p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight">Our Forces in Action</h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">Glimpses of our elite security personnel on deployment across various high-profile operations.</p>
           </div>
           <ImageSlider />
         </div>

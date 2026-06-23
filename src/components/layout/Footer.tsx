@@ -2,7 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Shield, Globe, Link as LinkIcon, Mail, MapPin, Phone } from "lucide-react";
+import { Shield, Link as LinkIcon, Mail, MapPin, Phone } from "lucide-react";
+
+const FacebookIcon = ({ className }: { className?: string }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+  >
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+  </svg>
+);
 
 export function Footer() {
   const pathname = usePathname();
@@ -26,8 +41,8 @@ export function Footer() {
               Discreet, world-class security for High-Net-Worth Individuals, executives, diplomats, and high-profile events across Sri Lanka. Your safety is our highest priority.
             </p>
             <div className="flex gap-4 mt-8">
-              <a href="https://www.facebook.com/share/1BcAMeXY3e/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 text-gray-400 hover:text-gold-500 hover:bg-gold-500/10 transition-colors">
-                <Globe className="h-5 w-5" />
+              <a href="https://web.facebook.com/profile.php?id=100088758960548" target="_blank" rel="noopener noreferrer" className="p-2 rounded-full bg-white/5 text-gray-400 hover:text-gold-500 hover:bg-gold-500/10 transition-colors">
+                <FacebookIcon className="h-5 w-5" />
               </a>
               <a href="#" className="p-2 rounded-full bg-white/5 text-gray-400 hover:text-gold-500 hover:bg-gold-500/10 transition-colors">
                 <LinkIcon className="h-5 w-5" />
