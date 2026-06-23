@@ -45,7 +45,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 tracking-tight max-w-4xl"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold text-white mb-6 tracking-tight max-w-4xl"
           >
             Discreet, World-Class <br className="hidden md:block" />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold-300 to-gold-600">
@@ -57,7 +57,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-xl text-gray-200 mb-10 max-w-2xl font-light leading-relaxed drop-shadow-lg"
+            className="text-lg sm:text-xl text-gray-200 mb-10 max-w-2xl font-light leading-relaxed drop-shadow-lg"
           >
             For High-Net-Worth Individuals, executives, diplomats & high-profile events. Elite protection deployed across Sri Lanka.
           </motion.p>
@@ -134,7 +134,7 @@ export default function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6 }}
-                className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-12 lg:gap-20`}
+                className={`flex flex-col ${index % 2 === 1 ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center gap-8 lg:gap-20`}
               >
                 {/* Image Side */}
                 <div className="w-full lg:w-1/2 relative aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 group shadow-2xl">
@@ -169,7 +169,7 @@ export default function Home() {
       {/* Trust & Credibility Section */}
       <section className="py-24 bg-black-950 border-b border-white/5">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             <motion.div 
               initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -242,8 +242,8 @@ export default function Home() {
             <div className="text-gold-500 text-sm font-bold tracking-[0.2em] uppercase mb-4">
               Gallery
             </div>
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight">Our Forces in Action</h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light">Glimpses of our elite security personnel on deployment across various high-profile operations.</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white tracking-tight">Our Forces in Action</h2>
+            <p className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto font-light">Glimpses of our elite security personnel on deployment across various high-profile operations.</p>
           </div>
           <ImageSlider />
         </div>
@@ -266,7 +266,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-lg tracking-tight"
+            className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 drop-shadow-lg tracking-tight"
           >
             Ready to secure your peace of mind?
           </motion.h2>
@@ -276,7 +276,7 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto font-light drop-shadow-md"
+            className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto font-light drop-shadow-md"
           >
             Contact us for a confidential consultation and a comprehensive threat assessment tailored to your needs.
           </motion.p>
