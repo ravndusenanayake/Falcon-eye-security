@@ -65,17 +65,23 @@ export function Footer() {
           <div>
             <h3 className="text-white font-semibold mb-6">Contact</h3>
             <ul className="space-y-4">
-              <li className="flex items-start gap-3 text-gray-400">
-                <MapPin className="h-5 w-5 text-gold-500 shrink-0 mt-0.5" />
-                <span>Colombo, Sri Lanka</span>
+              <li>
+                <a href="https://maps.google.com/?q=Colombo,+Sri+Lanka" target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 text-gray-400 hover:text-gold-500 transition-colors group">
+                  <MapPin className="h-5 w-5 text-gold-500 shrink-0 mt-0.5 group-hover:scale-110 transition-transform" />
+                  <span>Colombo, Sri Lanka</span>
+                </a>
               </li>
-              <li className="flex items-center gap-3 text-gray-400">
-                <Phone className="h-5 w-5 text-gold-500 shrink-0" />
-                <span>076 772 2412 / 075 632 2412</span>
+              <li>
+                <a href="tel:+94767722412" className="flex items-center gap-3 text-gray-400 hover:text-gold-500 transition-colors group">
+                  <Phone className="h-5 w-5 text-gold-500 shrink-0 group-hover:scale-110 transition-transform" />
+                  <span>076 772 2412 / 075 632 2412</span>
+                </a>
               </li>
-              <li className="flex items-center gap-3 text-gray-400">
-                <Mail className="h-5 w-5 text-gold-500 shrink-0" />
-                <span>info@falconeyesecurity.lk</span>
+              <li>
+                <a href="mailto:info@falconeyesecurity.lk" className="flex items-center gap-3 text-gray-400 hover:text-gold-500 transition-colors group">
+                  <Mail className="h-5 w-5 text-gold-500 shrink-0 group-hover:scale-110 transition-transform" />
+                  <span>info@falconeyesecurity.lk</span>
+                </a>
               </li>
             </ul>
           </div>
