@@ -217,12 +217,15 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-32 relative overflow-hidden flex items-center justify-center">
+      <section className="py-32 relative overflow-hidden flex items-center justify-center bg-black-950">
         {/* Background Image */}
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1582136014387-a2928509e51c?q=80&w=2070&auto=format&fit=crop')] bg-cover bg-center bg-fixed" />
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-fixed opacity-50"
+          style={{ backgroundImage: "url('https://images.unsplash.com/photo-1582136014387-a2928509e51c?q=80&w=2070&auto=format&fit=crop')" }}
+        />
         
         {/* Dark Overlay for Readability */}
-        <div className="absolute inset-0 bg-black-950/80 bg-gradient-to-t from-black-950 via-black-950/60 to-black-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black-950 via-black-950/40 to-black-950/80" />
         
         {/* Content */}
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center relative z-10">
