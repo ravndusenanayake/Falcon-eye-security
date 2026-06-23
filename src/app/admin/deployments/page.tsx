@@ -39,6 +39,7 @@ export default function DeploymentsPage() {
   // Action Menu & Edit States
   const [actionMenuOpen, setActionMenuOpen] = useState<string | null>(null);
   const [editingDeployment, setEditingDeployment] = useState<Deployment | null>(null);
+  const [filterStatus, setFilterStatus] = useState<string>("All");
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -177,38 +178,28 @@ export default function DeploymentsPage() {
     }
   };
 
-  const handleSeedDeployments = async () => {
-    const demoDeployments = [
-      { clientName: "Mr. Rajapaksa", serviceType: "VIP Close Protection", location: "Private Estate, Colombo 7", startDate: "2026-06-18", endDate: "2026-06-25", guardsAssigned: ["Suresh Silva", "Ajith Kumara"], status: "Active" },
-      { clientName: "TechCorp Gala Event", serviceType: "Corporate Security", location: "Shangri-La, Colombo", startDate: "2026-06-20", endDate: "2026-06-21", guardsAssigned: ["Kamal Perera", "Ranil Wickramasinghe"], status: "Scheduled" }
-    ];
-
-    try {
-      setLoading(true);
-      for (const dep of demoDeployments) {
-        await fetch("/api/deployments", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(dep)
-        });
-      }
-      fetchData();
-    } catch (err) {
-      console.error("Error seeding deployments:", err);
-    }
-  };
+  const filteredDeployments = deployments.filter(dep => 
+    filterStatus === "All" || dep.status === filterStatus
+  );
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <p className="text-sm text-gray-400">Manage active operational assignments and close protection squad schedules.</p>
-        <div className="flex gap-2">
-          <Button variant="secondary" onClick={handleSeedDeployments}>
-            Seed Demo Deployments
-          </Button>
-          <Button onClick={() => setIsModalOpen(true)}>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className="bg-black-900 border border-white/10 text-white text-sm rounded-lg px-3 py-2.5 focus:ring-2 focus:ring-gold-500 focus:outline-none flex-grow sm:flex-grow-0"
+          >
+            <option value="All">All Statuses</option>
+            <option value="Scheduled">Scheduled</option>
+            <option value="Active">Active</option>
+            <option value="Completed">Completed</option>
+          </select>
+          <Button onClick={() => setIsModalOpen(true)} className="whitespace-nowrap">
             <Plus className="h-4 w-4 mr-2" />
-            Schedule Deployment
+            Schedule
           </Button>
         </div>
       </div>
@@ -221,12 +212,12 @@ export default function DeploymentsPage() {
               <span>Loading deployment charts...</span>
             </div>
           </div>
-        ) : deployments.length === 0 ? (
+        ) : filteredDeployments.length === 0 ? (
           <div className="col-span-full py-12 text-center glass rounded-xl border border-white/5 text-gray-500">
-            No active operational schedules found. Click 'Seed Demo Deployments' to view.
+            No deployments found matching the current filter.
           </div>
         ) : (
-          deployments.map((dep) => (
+          filteredDeployments.map((dep) => (
             <div key={dep.id} className="glass border border-white/5 rounded-xl p-6 flex flex-col justify-between hover:border-gold-500/30 transition-all hover:scale-[1.01] duration-300">
               <div className="space-y-4">
                 {/* Header */}
