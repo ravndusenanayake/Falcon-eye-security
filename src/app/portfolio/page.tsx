@@ -124,28 +124,47 @@ export default function PortfolioPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  className="group glass rounded-2xl overflow-hidden border border-white/5 hover:border-gold-500/30 transition-all duration-300"
+                  className="group relative aspect-[3/4] w-full [perspective:1500px]"
                 >
-                  <div className="aspect-[3/4] relative overflow-hidden bg-black-800">
-                    <div 
-                      className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-                      style={{ backgroundImage: `url(${guard.imageUrl})` }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black-950 via-black-950/40 to-transparent" />
+                  <div className="relative h-full w-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
                     
-                    <div className="absolute bottom-0 left-0 w-full p-6">
-                      <h3 className="text-xl font-bold text-white mb-1">{guard.name}</h3>
-                      <p className="text-gold-500 text-sm font-medium mb-4">{guard.role}</p>
+                    {/* Front side - Image & basic info */}
+                    <div className="absolute inset-0 h-full w-full rounded-2xl [backface-visibility:hidden] overflow-hidden border border-white/5 bg-black-800 shadow-lg">
+                      <div 
+                        className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                        style={{ backgroundImage: `url(${guard.imageUrl})` }}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black-950 via-black-950/20 to-transparent" />
                       
-                      <ul className="space-y-2">
-                        {guard.certifications.slice(0, 3).map((qual, qIdx) => (
-                          <li key={qIdx} className="flex items-start gap-2 text-xs text-gray-300">
-                            <CheckCircle className="h-3.5 w-3.5 text-gold-500 shrink-0 mt-0.5" />
-                            <span>{qual}</span>
-                          </li>
-                        ))}
-                      </ul>
+                      <div className="absolute bottom-0 left-0 w-full p-6">
+                        <h3 className="text-xl font-bold text-white mb-1 drop-shadow-md">{guard.name}</h3>
+                        <p className="text-gold-500 text-sm font-medium drop-shadow-md">{guard.role}</p>
+                      </div>
                     </div>
+
+                    {/* Back side - Details on solid color */}
+                    <div className="absolute inset-0 h-full w-full rounded-2xl bg-black-900 border border-gold-500/30 [transform:rotateY(180deg)] [backface-visibility:hidden] p-6 flex flex-col items-center justify-center text-center shadow-[0_0_30px_rgba(234,179,8,0.1)]">
+                      <h3 className="text-2xl font-bold text-white mb-1">{guard.name}</h3>
+                      <p className="text-gold-500 text-sm font-medium mb-6">{guard.role}</p>
+                      
+                      <div className="w-full text-left mb-6 bg-black-950/50 p-4 rounded-xl border border-white/5">
+                        <p className="text-xs text-gray-400 mb-1 uppercase tracking-wider font-semibold">Experience</p>
+                        <p className="text-sm text-gray-200">{guard.experience}</p>
+                      </div>
+
+                      <div className="w-full text-left">
+                        <p className="text-xs text-gray-400 mb-3 uppercase tracking-wider font-semibold">Key Certifications</p>
+                        <ul className="space-y-3">
+                          {guard.certifications.slice(0, 4).map((qual, qIdx) => (
+                            <li key={qIdx} className="flex items-start gap-3 text-sm text-gray-300">
+                              <CheckCircle className="h-4 w-4 text-gold-500 shrink-0 mt-0.5" />
+                              <span className="leading-tight">{qual}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
                   </div>
                 </motion.div>
               ))
